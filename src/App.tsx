@@ -1,10 +1,11 @@
 import useFetch from './utils/use-fetch';
+import PostThumbnail from './components/PostThumbnail';
 import { BASE_URL } from './config';
 import { PostsApiResponse } from './types';
 
 export default function App() {
   const { data, error, loading } = useFetch<PostsApiResponse>(
-    `${BASE_URL}api/posts`,
+    `${BASE_URL}api/posts?sort[createdAt]=desc`,
   );
   console.log(data || error || loading);
 
@@ -12,10 +13,14 @@ export default function App() {
     <>
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
-      {data &&
-        data.data.map(
-          (post) => post.isPublished && <p key={post._id}>{post.title}</p>,
-        )}
+      {data && (
+        <main className="flex flex-col gap-8">
+          {data.data.map(
+            (post) =>
+              post.isPublished && <PostThumbnail key={post._id} data={post} />,
+          )}
+        </main>
+      )}
     </>
   );
 }
