@@ -1,4 +1,5 @@
 import useFetch from './utils/use-fetch';
+import Header from './components/Header';
 import PostThumbnail from './components/PostThumbnail';
 import { BASE_URL } from './config';
 import { PostsApiResponse } from './types';
@@ -11,6 +12,7 @@ export default function App() {
 
   return (
     <>
+      <Header />
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
       {data && (

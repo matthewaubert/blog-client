@@ -10,7 +10,7 @@ interface PostThumbnailProps {
 
 export default function PostThumbnail({ data }: PostThumbnailProps) {
   return (
-    <div className="grid gap-1">
+    <div className="px-8 grid gap-1">
       <a href="">
         {data.displayImg?.url ? (
           <img

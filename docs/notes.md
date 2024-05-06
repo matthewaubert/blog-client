@@ -36,7 +36,8 @@ To do:
 - [x] Build PostThumbnail component
 
 # 5/6/24
-- [ ] Build Header component
+- [x] Build Header component
+  - [ ] Set shadow to appear on scroll
   - [ ] Build hamburger menu
 - [ ] Add `url` virtual property on Posts, Users, Categories
 - [ ] Implement React Router
