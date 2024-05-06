@@ -37,7 +37,9 @@ To do:
 
 # 5/6/24
 - [x] Build Header component
-  - [ ] Set shadow to appear on scroll
+  - [x] Set shadow to appear/disappear on scroll
+  - [ ] Build useMediaQuery hook
   - [ ] Build hamburger menu
+  - [ ] Fetch Categories list from API
 - [ ] Add `url` virtual property on Posts, Users, Categories
 - [ ] Implement React Router

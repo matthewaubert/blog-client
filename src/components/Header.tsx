@@ -1,9 +1,37 @@
+import { useEffect, useRef } from 'react';
 import Icon from '@mdi/react';
 import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
 
 export default function Header() {
+  // TODO: check if window matches media query
+  // TODO: fetch Categories list from API
+
+  const headerRef = useRef<HTMLElement>(null);
+
+  // add shadow to Header when user scrolls down, remove when scrolls back to top
+  useEffect(() => {
+    function onScroll() {
+      if (headerRef.current) {
+        window.scrollY > 0
+          ? headerRef.current.classList.add('header-shadow')
+          : headerRef.current.classList.remove('header-shadow');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll);
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    };
+  });
+
+  // TODO: Build Hamburger Menu
+
   return (
-    <header className="sticky top-0 px-8 py-4 border-b border-gray-200 bg-white flex justify-between items-center shadow-lg">
+    <header
+      ref={headerRef}
+      className="sticky top-0 px-8 py-4 bg-white flex justify-between items-center"
+    >
       <h1 className="font-bold text-3xl">
         <a href="">Blog</a>
       </h1>

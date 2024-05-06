@@ -7,3 +7,9 @@
   line-height: 1.5;
   @apply text-gray-900;
 }
+
+.header-shadow {
+  @apply border-b;
+  @apply border-gray-200;
+  @apply shadow-lg;
+}
