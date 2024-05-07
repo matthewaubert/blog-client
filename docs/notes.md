@@ -46,11 +46,14 @@ To do:
 
 To do:
 - [x] Fetch Categories list from API for nav menu
-- [ ] Implement React Router
+- [x] Implement React Router
   - [x] Install, set up, and configure
-  - [ ] Create routes for User, Post, and Category links
-  - [ ] Create page for User links
-  - [ ] Create page for Post links
-  - [ ] Create page for Category links
+  - [x] Create routes for signup, login, logout, Users, Posts, and Categories links
+- [ ] Close DropdownMenu when user clicks a link or clicks outside of menu
+- [ ] Create page for User links
+- [ ] Create page for Post links
+- [ ] Create page for Category links
+- [ ] Enable User signup
+- [ ] Enable User login and logout
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?

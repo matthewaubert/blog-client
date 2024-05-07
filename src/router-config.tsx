@@ -12,6 +12,30 @@ const routerConfig = [
         path: '/',
         element: <Home />,
       },
+      {
+        path: 'signup',
+        // element: </>,
+      },
+      {
+        path: 'login',
+        // element: </>,
+      },
+      {
+        path: 'logout',
+        // element: </>,
+      },
+      {
+        path: 'users/:userSlug',
+        // element: </>,
+      },
+      {
+        path: 'posts/:postSlug',
+        // element: </>,
+      },
+      {
+        path: 'categories/:categorySlug',
+        // element: </>,
+      },
     ],
   },
 ];

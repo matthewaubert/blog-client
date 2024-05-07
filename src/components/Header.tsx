@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import useFetch from '../utils/use-fetch';
+import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
 import Icon from '@mdi/react';
 import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
@@ -39,7 +40,7 @@ export default function Header() {
       className="sticky top-0 px-8 py-4 bg-white flex justify-between items-center"
     >
       <h1 className="font-bold text-3xl">
-        <a href="">Blog</a>
+        <Link to="/">Blog</Link>
       </h1>
       <DropdownMenu
         icon={<Icon path={mdiMenu} color="#6b7280" className="h-8" />}
@@ -51,21 +52,17 @@ export default function Header() {
         }
       >
         <Icon path={mdiMagnify} color="#6b7280" className="h-7" />
-        <a href="" className="">
-          Sign up
-        </a>
-        <a href="" className="">
-          Log in
-        </a>
+        <Link to="/signup">Sign up</Link>
+        <Link to="/login">Log in</Link>
         <hr className="border border-gray-300 w-full" />
         <>
           {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
           {data &&
             data.data.map((category) => (
-              <a href="" key={category._id}>
+              <Link to={`categories/${category.slug}`} key={category._id}>
                 {category.name}
-              </a>
+              </Link>
             ))}
         </>
       </DropdownMenu>

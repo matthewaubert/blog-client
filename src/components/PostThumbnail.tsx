@@ -1,17 +1,20 @@
+import { Link } from 'react-router-dom';
+import Icon from '@mdi/react';
+import { mdiImageArea } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/image-area/
 import { PostData } from '../types';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
 import { format } from 'date-fns'; // https://date-fns.org/
-import Icon from '@mdi/react';
-import { mdiImageArea } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/image-area/
 
 interface PostThumbnailProps {
   data: PostData;
 }
 
 export default function PostThumbnail({ data }: PostThumbnailProps) {
+  const postUrl = `posts/${data.slug}`;
+
   return (
     <div className="px-8 grid gap-1">
-      <a href="">
+      <Link to={postUrl}>
         {data.displayImg?.url ? (
           <img
             src={data.displayImg.url}
@@ -25,20 +28,23 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
             className="aspect-[3_/_2] mb-1 bg-gray-200"
           />
         )}
-      </a>
+      </Link>
       <h3 className="font-bold text-xl">
-        <a href="">{decode(data.title)}</a>
+        <Link to={postUrl}>{decode(data.title)}</Link>
       </h3>
       <time dateTime={data.createdAt} className="text-gray-400">
         {format(data.createdAt, 'PPP')}
       </time>
-      <p>by: {decode(data.user.username)}</p>
+      <p>
+        by:{' '}
+        <Link to={`users/${data.user.slug}`}>{decode(data.user.username)}</Link>
+      </p>
       <p className="line-clamp-5 text-ellipsis">
         {trimString(decode(data.content))}
       </p>
-      <a href="" className="text-sm underline">
+      <Link to={postUrl} className="text-sm underline">
         Read more
-      </a>
+      </Link>
     </div>
   );
 }
