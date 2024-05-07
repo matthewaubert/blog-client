@@ -46,6 +46,11 @@ To do:
 
 To do:
 - [x] Fetch Categories list from API for nav menu
-- [ ] Build useMediaQuery hook
-- [ ] Add `url` virtual property on Posts, Users, Categories
 - [ ] Implement React Router
+  - [x] Install, set up, and configure
+  - [ ] Create routes for User, Post, and Category links
+  - [ ] Create page for User links
+  - [ ] Create page for Post links
+  - [ ] Create page for Category links
+- [ ] Build useMediaQuery hook?
+- [ ] Add `url` virtual property on Posts, Users, Categories?
