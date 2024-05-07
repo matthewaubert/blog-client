@@ -36,10 +36,12 @@ To do:
 - [x] Build PostThumbnail component
 
 # 5/6/24
+
+To do:
 - [x] Build Header component
   - [x] Set shadow to appear/disappear on scroll
-  - [ ] Build useMediaQuery hook
-  - [ ] Build hamburger menu
+  - [x] Build DropdownMenu
   - [ ] Fetch Categories list from API
+  - [ ] Build useMediaQuery hook
 - [ ] Add `url` virtual property on Posts, Users, Categories
 - [ ] Implement React Router

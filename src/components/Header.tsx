@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
+import DropdownMenu from './DropdownMenu';
 import Icon from '@mdi/react';
 import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
+import { mdiMenu } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/menu/
 
 export default function Header() {
   // TODO: check if window matches media query
@@ -25,8 +27,6 @@ export default function Header() {
     };
   });
 
-  // TODO: Build Hamburger Menu
-
   return (
     <header
       ref={headerRef}
@@ -35,15 +35,18 @@ export default function Header() {
       <h1 className="font-bold text-3xl">
         <a href="">Blog</a>
       </h1>
-      <nav className="flex gap-3 items-center">
+      <DropdownMenu
+        icon={<Icon path={mdiMenu} color="#6b7280" className="h-8" />}
+        className="absolute left-0 right-0 top-[68px] px-8 py-6 flex flex-col items-start gap-3 bg-gray-200 border-b border-gray-300 shadow-lg"
+      >
         <Icon path={mdiMagnify} color="#6b7280" className="h-7" />
-        <a href="" className="bg-blue-500 text-white text-sm rounded px-3 py-2">
+        <a href="" className="">
           Sign up
         </a>
-        <a href="" className="bg-blue-500 text-white text-sm rounded px-3 py-2">
+        <a href="" className="">
           Log in
         </a>
-      </nav>
+      </DropdownMenu>
     </header>
   );
 }
