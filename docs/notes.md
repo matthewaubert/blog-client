@@ -41,7 +41,11 @@ To do:
 - [x] Build Header component
   - [x] Set shadow to appear/disappear on scroll
   - [x] Build DropdownMenu
-  - [ ] Fetch Categories list from API
-  - [ ] Build useMediaQuery hook
+
+# 5/7/24
+
+To do:
+- [x] Fetch Categories list from API for nav menu
+- [ ] Build useMediaQuery hook
 - [ ] Add `url` virtual property on Posts, Users, Categories
 - [ ] Implement React Router

@@ -27,7 +27,7 @@ export interface PostData {
     name: string;
     slug: string;
     description?: string;
-  }
+  };
   tags?: string[];
   displayImg?: {
     attribution?: string;
@@ -36,4 +36,14 @@ export interface PostData {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+export interface CategoriesApiResponse extends ApiResponse {
+  data: CategoriesData[];
+}
+
+export interface CategoriesData {
+  _id: string;
+  name: string;
+  slug: string;
 }

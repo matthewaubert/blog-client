@@ -1,12 +1,18 @@
 import { useEffect, useRef } from 'react';
+import useFetch from '../utils/use-fetch';
 import DropdownMenu from './DropdownMenu';
 import Icon from '@mdi/react';
 import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
 import { mdiMenu } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/menu/
+import { CategoriesApiResponse } from '../types';
+import { BASE_URL } from '../config';
 
 export default function Header() {
-  // TODO: check if window matches media query
+  // TODO: check if window matches media query?
   // TODO: fetch Categories list from API
+  const { data, error, loading } = useFetch<CategoriesApiResponse>(
+    `${BASE_URL}api/categories?sort[name]=asc`,
+  );
 
   const headerRef = useRef<HTMLElement>(null);
 
@@ -37,7 +43,12 @@ export default function Header() {
       </h1>
       <DropdownMenu
         icon={<Icon path={mdiMenu} color="#6b7280" className="h-8" />}
-        className="absolute left-0 right-0 top-[68px] px-8 py-6 flex flex-col items-start gap-3 bg-gray-200 border-b border-gray-300 shadow-lg"
+        className={
+          'absolute left-0 right-0 top-[68px] px-8 py-6 ' +
+          'max-h-[calc(100vh-68px)] overflow-y-scroll ' +
+          'flex flex-col items-start gap-3 ' +
+          'bg-gray-200 border-b border-gray-300 font-bold shadow-lg'
+        }
       >
         <Icon path={mdiMagnify} color="#6b7280" className="h-7" />
         <a href="" className="">
@@ -46,6 +57,17 @@ export default function Header() {
         <a href="" className="">
           Log in
         </a>
+        <hr className="border border-gray-300 w-full" />
+        <>
+          {loading && <p>Loading...</p>}
+          {error && <p>{error}</p>}
+          {data &&
+            data.data.map((category) => (
+              <a href="" key={category._id}>
+                {category.name}
+              </a>
+            ))}
+        </>
       </DropdownMenu>
     </header>
   );
