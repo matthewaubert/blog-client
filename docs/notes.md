@@ -49,7 +49,8 @@ To do:
 - [x] Implement React Router
   - [x] Install, set up, and configure
   - [x] Create routes for signup, login, logout, Users, Posts, and Categories links
-- [ ] Close DropdownMenu when user clicks a link or clicks outside of menu
+- [x] Close DropdownMenu when user clicks a link or outside of menu
+- [ ] Modify API endpoints to support querying resources by slug
 - [ ] Create page for User links
 - [ ] Create page for Post links
 - [ ] Create page for Category links

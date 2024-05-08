@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface DropdownMenuProps {
   icon: JSX.Element;
@@ -22,10 +22,45 @@ export default function DropdownMenu({
 }: DropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  // close DropdownMenu when user clicks on link or outside of menu
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (!e.target || !navRef.current || !buttonRef.current) return;
+      const target = e.target as HTMLElement;
+
+      if (
+        target.tagName === 'A' || // if target is a link OR
+        // (target isn't `navRef` or `buttonRef` AND
+        // neither `navRef` nor `buttonRef` contain target)
+        (target !== (navRef.current || buttonRef.current) &&
+          !Array.from(navRef.current?.children).includes(target) &&
+          !Array.from(buttonRef.current?.children).includes(target))
+      ) {
+        // console.log('setIsOpen(false)');
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)}>{icon}</button>
-      {isOpen && <nav className={className}>{children}</nav>}
+      <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)}>
+        {icon}
+      </button>
+      {isOpen && (
+        <nav ref={navRef} className={className}>
+          {children}
+        </nav>
+      )}
     </>
   );
 }

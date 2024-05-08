@@ -8,6 +8,10 @@
   @apply text-gray-900;
 }
 
+path {
+  @apply pointer-events-none;
+}
+
 .header-shadow {
   @apply border-b;
   @apply border-gray-200;
