@@ -53,7 +53,7 @@ To do:
 - [x] Modify API endpoints to support querying resources by slug
 - [x] Create page for individual Posts
 - [x] Create page for individual Users
-- [ ] Create page for individual Categories
+- [x] Create page for individual Categories
 - [ ] Enable User signup
 - [ ] Enable User login and logout
 - [ ] Build useMediaQuery hook?

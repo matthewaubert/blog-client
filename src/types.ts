@@ -38,7 +38,7 @@ export interface PostData {
   updatedAt: string;
 }
 
-export interface CategoriesData {
+export interface CategoryData {
   _id: string;
   name: string;
   slug: string;

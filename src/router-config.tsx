@@ -3,6 +3,7 @@ import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
+import CategoryPage from './pages/CategoryPage';
 
 const routerConfig = [
   {
@@ -36,7 +37,7 @@ const routerConfig = [
       },
       {
         path: 'categories/:categorySlug',
-        // element: </>,
+        element: <CategoryPage />,
       },
     ],
   },
