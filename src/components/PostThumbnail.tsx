@@ -9,10 +9,10 @@ interface PostThumbnailProps {
 }
 
 export default function PostThumbnail({ data }: PostThumbnailProps) {
-  const postUrl = `posts/${data.slug}`;
+  const postUrl = `/posts/${data.slug}`;
 
   return (
-    <div className="grid gap-1">
+    <article className="grid gap-1">
       <Link to={postUrl}>
         <Image
           src={data.displayImg?.url ? data.displayImg.url : ''}
@@ -28,7 +28,9 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
       </time>
       <p>
         by:{' '}
-        <Link to={`users/${data.user.slug}`}>{decode(data.user.username)}</Link>
+        <Link to={`/users/${data.user.slug}`}>
+          {decode(data.user.username)}
+        </Link>
       </p>
       <p className="line-clamp-5 text-ellipsis">
         {trimString(decode(data.content))}
@@ -36,7 +38,7 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
       <Link to={postUrl} className="text-sm underline">
         Read more
       </Link>
-    </div>
+    </article>
   );
 }
 

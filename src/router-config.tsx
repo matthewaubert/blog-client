@@ -1,6 +1,7 @@
 import App from './App';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
+import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 
 const routerConfig = [
@@ -27,7 +28,7 @@ const routerConfig = [
       },
       {
         path: 'users/:userSlug',
-        // element: </>,
+        element: <UserPage />,
       },
       {
         path: 'posts/:postSlug',
