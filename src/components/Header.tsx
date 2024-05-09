@@ -5,13 +5,13 @@ import DropdownMenu from './DropdownMenu';
 import Icon from '@mdi/react';
 import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
 import { mdiMenu } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/menu/
-import { CategoriesApiResponse } from '../types';
+import { ApiResponse, CategoriesData } from '../types';
 import { BASE_URL } from '../config';
 
 export default function Header() {
   // TODO: check if window matches media query?
   // TODO: fetch Categories list from API
-  const { data, error, loading } = useFetch<CategoriesApiResponse>(
+  const { data, error, loading } = useFetch<ApiResponse<CategoriesData[]>>(
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
 

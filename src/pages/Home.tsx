@@ -1,10 +1,10 @@
 import useFetch from '../utils/use-fetch';
 import PostThumbnail from '../components/PostThumbnail';
 import { BASE_URL } from '../config';
-import { PostsApiResponse } from '../types';
+import { ApiResponse, PostData } from '../types';
 
 export default function Home() {
-  const { data, error, loading } = useFetch<PostsApiResponse>(
+  const { data, error, loading } = useFetch<ApiResponse<PostData[]>>(
     `${BASE_URL}api/posts?sort[createdAt]=desc`,
   );
   console.log(data || error || loading);

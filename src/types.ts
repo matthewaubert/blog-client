@@ -1,12 +1,12 @@
-interface ApiResponse {
+/**
+ * @param {any} D - expected response data type, e.g. `PostData[]`
+ */
+export interface ApiResponse<D> {
   success: boolean;
   message: string;
   errors?: object[];
-}
-
-export interface PostsApiResponse extends ApiResponse {
-  count: number;
-  data: PostData[];
+  count?: number;
+  data: D;
 }
 
 export interface PostData {
@@ -36,10 +36,6 @@ export interface PostData {
   };
   createdAt: string;
   updatedAt: string;
-}
-
-export interface CategoriesApiResponse extends ApiResponse {
-  data: CategoriesData[];
 }
 
 export interface CategoriesData {
