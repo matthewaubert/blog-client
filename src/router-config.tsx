@@ -1,6 +1,7 @@
 import App from './App';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
+import PostPage from './pages/PostPage';
 
 const routerConfig = [
   {
@@ -30,7 +31,7 @@ const routerConfig = [
       },
       {
         path: 'posts/:postSlug',
-        // element: </>,
+        element: <PostPage />,
       },
       {
         path: 'categories/:categorySlug',

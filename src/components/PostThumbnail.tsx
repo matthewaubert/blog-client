@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Image from './Image';
 import { PostData } from '../types';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
-import { format } from 'date-fns'; // https://date-fns.org/
+import { format } from 'date-fns/format'; // https://date-fns.org/v3.6.0/docs/format
 
 interface PostThumbnailProps {
   data: PostData;
@@ -12,7 +12,7 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
   const postUrl = `posts/${data.slug}`;
 
   return (
-    <div className="px-8 grid gap-1">
+    <div className="grid gap-1">
       <Link to={postUrl}>
         <Image
           src={data.displayImg?.url ? data.displayImg.url : ''}

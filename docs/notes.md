@@ -50,10 +50,10 @@ To do:
   - [x] Install, set up, and configure
   - [x] Create routes for signup, login, logout, Users, Posts, and Categories links
 - [x] Close DropdownMenu when user clicks a link or outside of menu
-- [ ] Modify API endpoints to support querying resources by slug
-- [ ] Create page for User links
-- [ ] Create page for Post links
-- [ ] Create page for Category links
+- [x] Modify API endpoints to support querying resources by slug
+- [x] Create page for individual Posts
+- [ ] Create page for individual Users
+- [ ] Create page for individual Categories
 - [ ] Enable User signup
 - [ ] Enable User login and logout
 - [ ] Build useMediaQuery hook?

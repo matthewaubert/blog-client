@@ -7,6 +7,7 @@ import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/i
 import { mdiMenu } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/menu/
 import { ApiResponse, CategoriesData } from '../types';
 import { BASE_URL } from '../config';
+import { decode } from 'he';
 
 export default function Header() {
   // TODO: check if window matches media query?
@@ -61,7 +62,7 @@ export default function Header() {
           {data &&
             data.data.map((category) => (
               <Link to={`categories/${category.slug}`} key={category._id}>
-                {category.name}
+                {decode(category.name)}
               </Link>
             ))}
         </>
