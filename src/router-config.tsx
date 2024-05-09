@@ -1,5 +1,5 @@
 import App from './App';
-import Home from './pages/Home';
+import HomePage from './pages/HomePage';
 import ErrorPage from './pages/ErrorPage';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
@@ -13,7 +13,7 @@ const routerConfig = [
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: <HomePage />,
       },
       {
         path: 'signup',

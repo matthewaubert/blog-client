@@ -4,7 +4,7 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { BASE_URL } from '../config';
 import { ApiResponse, PostData } from '../types';
 
-export default function Home() {
+export default function HomePage() {
   const { data, error, loading } = useFetch<ApiResponse<PostData[]>>(
     `${BASE_URL}api/posts?sort[createdAt]=desc`,
   );
