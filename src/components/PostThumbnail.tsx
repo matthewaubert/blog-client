@@ -20,7 +20,7 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
           className="aspect-[3_/_2] mb-1"
         />
       </Link>
-      <h3 className="font-bold text-xl">
+      <h3>
         <Link to={postUrl}>{decode(data.title)}</Link>
       </h3>
       <time dateTime={data.createdAt} className="text-gray-400">

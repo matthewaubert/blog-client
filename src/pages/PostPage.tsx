@@ -28,7 +28,7 @@ export default function PostPage() {
             alt=""
             className="aspect-[3_/_2] mb-1"
           />
-          <h3 className="font-bold text-xl">{decode(data.title)}</h3>
+          <h3>{decode(data.title)}</h3>
           <time dateTime={data.createdAt} className="text-gray-400">
             {format(data.createdAt, 'PPP')}
           </time>

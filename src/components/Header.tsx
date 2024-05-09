@@ -38,9 +38,9 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 px-8 py-4 bg-white flex justify-between items-center"
+      className="sticky top-0 py-4 bg-white flex justify-between items-center"
     >
-      <h1 className="font-bold text-3xl">
+      <h1>
         <Link to="/">Blog</Link>
       </h1>
       <DropdownMenu

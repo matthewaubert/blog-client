@@ -8,8 +8,24 @@
   @apply text-gray-900;
 }
 
+h1 {
+  @apply font-bold;
+  @apply text-3xl;
+}
+
+h2 {
+  @apply font-bold;
+  @apply text-2xl;
+}
+
+h3 {
+  @apply font-bold;
+  @apply text-xl;
+}
+
+header,
 main {
-  @apply px-8;
+  @apply px-6;
 }
 
 path {

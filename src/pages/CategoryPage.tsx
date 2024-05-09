@@ -38,7 +38,7 @@ export default function UserPage() {
       {postError && <p>{postError}</p>}
 
       {categoryData && (
-        <h2 className="font-bold text-xl">
+        <h2>
           Category: {categoryData.data.name}
         </h2>
       )}

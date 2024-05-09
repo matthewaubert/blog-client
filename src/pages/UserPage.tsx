@@ -25,9 +25,7 @@ export default function UserPage() {
       {error && <p>{error}</p>}
       {userPosts.length ? (
         <>
-          <h2 className="font-bold text-xl">
-            Posts by {userPosts[0].user.username}
-          </h2>
+          <h2>Posts by {userPosts[0].user.username}</h2>
           <div className="flex flex-col gap-8">
             {userPosts.map(
               (post) =>
