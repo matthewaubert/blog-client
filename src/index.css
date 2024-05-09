@@ -37,3 +37,36 @@ path {
   @apply border-gray-200;
   @apply shadow-lg;
 }
+
+/* .form {
+  @apply flex;
+  @apply flex-col;
+  @apply gap-4;
+} */
+
+.input-container {
+  @apply flex;
+  @apply flex-col;
+  @apply gap-1;
+}
+
+.input {
+  @apply w-full;
+  @apply border;
+  @apply border-gray-300;
+  @apply rounded;
+  @apply px-4;
+  @apply py-3;
+  @apply shadow-inner;
+}
+
+.form-btn {
+  @apply bg-blue-500;
+  @apply hover:bg-blue-600;
+  @apply text-white;
+  @apply text-lg;
+  @apply rounded;
+  @apply px-4;
+  @apply py-3;
+  @apply mt-1;
+}

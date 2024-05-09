@@ -1,6 +1,7 @@
 import App from './App';
 import HomePage from './pages/HomePage';
 import ErrorPage from './pages/ErrorPage';
+import SignupPage from './pages/SignupPage';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import CategoryPage from './pages/CategoryPage';
@@ -17,7 +18,7 @@ const routerConfig = [
       },
       {
         path: 'signup',
-        // element: </>,
+        element: <SignupPage />,
       },
       {
         path: 'login',
