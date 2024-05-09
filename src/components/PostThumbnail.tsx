@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import Icon from '@mdi/react';
-import { mdiImageArea } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/image-area/
+import Image from './Image';
 import { PostData } from '../types';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
 import { format } from 'date-fns'; // https://date-fns.org/
@@ -15,19 +14,11 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
   return (
     <div className="px-8 grid gap-1">
       <Link to={postUrl}>
-        {data.displayImg?.url ? (
-          <img
-            src={data.displayImg.url}
-            alt=""
-            className="aspect-[3_/_2] mb-1"
-          />
-        ) : (
-          <Icon
-            path={mdiImageArea}
-            color="#9ca3af"
-            className="aspect-[3_/_2] mb-1 bg-gray-200"
-          />
-        )}
+        <Image
+          src={data.displayImg?.url ? data.displayImg.url : ''}
+          alt=""
+          className="aspect-[3_/_2] mb-1"
+        />
       </Link>
       <h3 className="font-bold text-xl">
         <Link to={postUrl}>{decode(data.title)}</Link>
