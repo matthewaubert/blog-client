@@ -1,7 +1,18 @@
 import { useState } from 'react';
+import useFetch from '../utils/use-fetch';
 // import ErrorMsg from '../components/ErrorMsg';
+import { BASE_URL } from '../config';
 
-const emptyFormData = {
+interface FormData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+const emptyFormData: FormData = {
   firstName: '',
   lastName: '',
   username: '',
@@ -12,16 +23,45 @@ const emptyFormData = {
 
 export default function SignupPage() {
   const [formData, setFormData] = useState(emptyFormData);
+  const { data, fetchData } = useFetch();
+  console.log(data);
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(`${e.target.name}: ${e.target.value}`);
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) return;
+
+    for (const key in formData) {
+      if (Object.hasOwn(formData, key)) {
+        if (formData[key as keyof FormData] === undefined) return;
+      }
+    }
+
+    // send formData to API as POST request
+    fetchData(`${BASE_URL}api/users`, 'POST', formData)
+      .catch((err) => {
+        console.error(err);
+        // TODO: display errors
+      })
+      .finally(() => {
+        // TODO: show success message
+        // TODO: navigate to login page (after a few seconds?)
+      });
   }
 
   return (
     <main className="flex flex-col gap-4">
       <h2>Sign Up</h2>
-      <form action="" method="POST" className="grid grid-cols-2 gap-4">
+      <form
+        action=""
+        method="POST"
+        className="grid grid-cols-2 gap-4"
+        onSubmit={handleSubmit}
+      >
         <div className="input-container">
           <label htmlFor="firstName">First Name</label>
           <input
@@ -33,6 +73,7 @@ export default function SignupPage() {
             required
             value={formData.firstName}
             onChange={handleInputChange}
+            autoFocus
           />
           {/* <ErrorMsg msg="" /> */}
         </div>

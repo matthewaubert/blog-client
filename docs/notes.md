@@ -50,11 +50,29 @@ To do:
   - [x] Install, set up, and configure
   - [x] Create routes for signup, login, logout, Users, Posts, and Categories links
 - [x] Close DropdownMenu when user clicks a link or outside of menu
+
+# 5/8/24
+
+To do:
 - [x] Modify API endpoints to support querying resources by slug
+
+# 5/9/24
+
+To do:
 - [x] Create page for individual Posts
 - [x] Create page for individual Users
 - [x] Create page for individual Categories
-- [ ] Enable User signup
+- [x] Create signup page
+
+# 5/10/24
+
+To do:
+- [ ] Signup Page
+   - [x] Enable User signup
+   - [ ] Navigate to login page after signup
+   - [ ] Show success message after signup, before navigation
+   - [ ] Show errors on signup page
+   - [ ] Refactor Form to separate component?
 - [ ] Enable User login and logout
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?
