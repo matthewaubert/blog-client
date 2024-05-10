@@ -1,35 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 /**
- * custom React hook: fetch data from input url
- * @param {string} url - e.g. https://pokeapi.co/api/v2/pokemon
- * @param {string} method - GET, POST, PUT, DELETE, etc. Optional, defaults to 'GET'
- * @param {object} body - optional request body object
- * @returns {object} obj w/ 3 properties: `data`, `error`, `loading`
+ * Custom React hook: fetch data from given resource URL and return an object with relevant info.
+ * @param {string} [url] - The resource you with to fetch. If not provided, `fetchData` will not automatically run.
+ * @param {string} [method] - GET, POST, PUT, DELETE, etc. Optional, defaults to 'GET'.
+ * @param {object} [body] - Optional request body object
+ * @returns {object} obj w/ 4 properties: `data`, `error`, `loading`, `fetchData`
  * - `data` will not be null if request was successful
  * - `error` will not be null if fetch was unsuccessful
  * - `loading` will be true until fetch request is resolved
- * - e.g. `{ data: [...], error: null, loading: false }`
+ * - `fetchData` is an async function with 3 parameters: `url`, `method`, `body`. When called,
+ * it fetches the desired resource and sets the `data`, `error`, and `loading` values.
+ * - e.g. `{ data: [...], error: null, loading: false, fetchData: function }`
  */
 export default function useFetch<Type>(
-  url: string,
-  method?: string, // optional, defaults to 'GET'
+  url?: string, // if not provided, `fetchData` will not automatically run
+  method: string = 'GET', // optional, defaults to 'GET'
   body?: object, // optional
-): {
-  data: Type | null; // should we use a `Type` parameter or `unknown`?
-  error: string | null;
-  loading: boolean;
-} {
+) {
   const [data, setData] = useState<Type | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const bodyJson = body ? JSON.stringify(body) : null;
 
-  useEffect(() => {
-    (async () => {
+  const fetchData = useCallback(
+    async (url: string, method: string, body?: object) => {
+      const bodyJson = body ? JSON.stringify(body) : null;
+
       try {
         const response = await fetch(url, {
-          method: method || 'GET', // default to 'GET' if no `method` supplied
+          method: method, // default to 'GET' if no `method` supplied
           mode: 'cors',
           headers: { 'Content-Type': 'application/json' },
           // send `body` arg if supplied, else do not send body
@@ -48,12 +47,20 @@ export default function useFetch<Type>(
       } finally {
         setLoading(false);
       }
-    })().catch((err) => {
-      console.error(err); // is this the best way to handle this?
-    });
-  }, [bodyJson, method, url]);
+    },
+    [],
+  );
 
-  return { data, error, loading };
+  // only run this if params are provided to `useFetch`
+  useEffect(() => {
+    if (url) {
+      fetchData(url, method, body).catch((err) => {
+        console.error(err);
+      });
+    }
+  }, [fetchData, url, method, body]);
+
+  return { data, error, loading, fetchData };
 }
 
 /**
