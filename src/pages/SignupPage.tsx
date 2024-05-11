@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useFetch from '../utils/use-fetch';
+import { useNavigate } from 'react-router-dom';
 // import ErrorMsg from '../components/ErrorMsg';
+import SuccessMsg from '../components/SuccessMsg';
 import { BASE_URL } from '../config';
 
 interface FormData {
@@ -23,8 +25,17 @@ const emptyFormData: FormData = {
 
 export default function SignupPage() {
   const [formData, setFormData] = useState(emptyFormData);
+  const [success, setSuccess] = useState(false);
   const { data, fetchData } = useFetch();
+  const navigate = useNavigate();
   console.log(data);
+
+  // 3 seconds after successful form submission, navigate to login page
+  useEffect(() => {
+    if (success) {
+      setTimeout(() => navigate('/login'), 2500);
+    }
+  }, [navigate, success]);
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -48,110 +59,113 @@ export default function SignupPage() {
         // TODO: display errors
       })
       .finally(() => {
-        // TODO: show success message
-        // TODO: navigate to login page (after a few seconds?)
+        // show success message and navigate to login page
+        setSuccess(true);
       });
   }
 
   return (
-    <main className="flex flex-col gap-4">
-      <h2>Sign Up</h2>
-      <form
-        action=""
-        method="POST"
-        className="grid grid-cols-2 gap-4"
-        onSubmit={handleSubmit}
-      >
-        <div className="input-container">
-          <label htmlFor="firstName">First Name</label>
-          <input
-            type="text"
-            className="input"
-            id="firstName"
-            name="firstName"
-            placeholder="e.g. Sam"
-            required
-            value={formData.firstName}
-            onChange={handleInputChange}
-            autoFocus
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
-        <div className="input-container">
-          <label htmlFor="lastName">Last Name</label>
-          <input
-            type="text"
-            className="input"
-            id="lastName"
-            name="lastName"
-            placeholder="e.g. Smith"
-            required
-            value={formData.lastName}
-            onChange={handleInputChange}
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
+    <>
+      {success && <SuccessMsg />}
+      <main className="flex flex-col gap-4">
+        <h2>Sign Up</h2>
+        <form
+          action=""
+          method="POST"
+          className="grid grid-cols-2 gap-4"
+          onSubmit={handleSubmit}
+        >
+          <div className="input-container">
+            <label htmlFor="firstName">First Name</label>
+            <input
+              type="text"
+              className="input"
+              id="firstName"
+              name="firstName"
+              placeholder="e.g. Sam"
+              required
+              value={formData.firstName}
+              onChange={handleInputChange}
+              autoFocus
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
+          <div className="input-container">
+            <label htmlFor="lastName">Last Name</label>
+            <input
+              type="text"
+              className="input"
+              id="lastName"
+              name="lastName"
+              placeholder="e.g. Smith"
+              required
+              value={formData.lastName}
+              onChange={handleInputChange}
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
 
-        <div className="input-container col-span-2">
-          <label htmlFor="username">Username</label>
-          <input
-            type="text"
-            className="input"
-            id="username"
-            name="username"
-            placeholder="sam.smith"
-            required
-            value={formData.username}
-            onChange={handleInputChange}
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
-        <div className="input-container col-span-2">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            className="input"
-            id="email"
-            name="email"
-            placeholder="example@email.com"
-            required
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
+          <div className="input-container col-span-2">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              className="input"
+              id="username"
+              name="username"
+              placeholder="sam.smith"
+              required
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
+          <div className="input-container col-span-2">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              className="input"
+              id="email"
+              name="email"
+              placeholder="example@email.com"
+              required
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
 
-        <div className="input-container">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            className="input"
-            id="password"
-            name="password"
-            required
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
-        <div className="input-container">
-          <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
-            type="password"
-            className="input"
-            id="confirmPassword"
-            name="confirmPassword"
-            required
-            value={formData.confirmPassword}
-            onChange={handleInputChange}
-          />
-          {/* <ErrorMsg msg="" /> */}
-        </div>
+          <div className="input-container">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              className="input"
+              id="password"
+              name="password"
+              required
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
+          <div className="input-container">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              type="password"
+              className="input"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+            />
+            {/* <ErrorMsg msg="" /> */}
+          </div>
 
-        <button type="submit" className="form-btn col-span-2">
-          Sign up
-        </button>
-      </form>
-    </main>
+          <button type="submit" className="form-btn col-span-2">
+            Sign up
+          </button>
+        </form>
+      </main>
+    </>
   );
 }

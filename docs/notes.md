@@ -69,8 +69,8 @@ To do:
 To do:
 - [ ] Signup Page
    - [x] Enable User signup
-   - [ ] Navigate to login page after signup
-   - [ ] Show success message after signup, before navigation
+   - [x] Navigate to login page after signup
+   - [x] Show success message after signup, before navigation
    - [ ] Show errors on signup page
    - [ ] Refactor Form to separate component?
 - [ ] Enable User login and logout
