@@ -28,10 +28,10 @@ export default function SignupPage() {
   const [formErrors, setFormErrors] = useState({ ...emptyFormData });
   const [success, setSuccess] = useState(false);
   const passwordRef = useRef<null | HTMLInputElement>(null);
-  const { data, fetchData } = useFetch();
+  const { data, error, fetchData } = useFetch();
   const navigate = useNavigate();
   // console.log('formErrors:', formErrors);
-  console.log('data:', data);
+  console.log('data:', data || error);
 
   // 3 seconds after successful form submission, navigate to login page
   useEffect(() => {
@@ -46,51 +46,39 @@ export default function SignupPage() {
     setFormErrors({ ...formErrors, [e.target.name]: '' });
   }
 
-  // if input is invalid when it loses focus: set form error
+  // if field is invalid when it loses focus: set form error
   function handleInputBlur(e: React.FocusEvent<HTMLInputElement>) {
-    let isValid = e.target.validity.valid;
-    let message = e.target.validationMessage;
+    const { fieldIsValid, message } = validateField(
+      e.target,
+      passwordRef.current,
+    );
+    if (message) console.log(`${e.target.name}: ${message}`);
 
-    // if it's the `passwordConfirm` field and doesn't match `password` field:
-    // mark field invalid and create validation message
-    if (
-      e.target.name === 'confirmPassword' &&
-      e.target.value !== passwordRef.current?.value
-    ) {
-      isValid = false;
-      message = 'Password confirmation must match password.';
-    }
-
-    if (!isValid && message) {
-      // set form error
-      setFormErrors({ ...formErrors, [e.target.name]: message });
-    } else {
-      // clear form error
-      setFormErrors({ ...formErrors, [e.target.name]: '' });
-    }
+    setFormErrors({
+      ...formErrors,
+      // if field is invalid and there's a message: set form error; else: clear form error
+      [e.target.name]: !fieldIsValid && message ? message : '',
+    });
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) return;
+    const { formIsValid, messages } = validateForm(e.target as HTMLFormElement);
+    setFormErrors({ ...formErrors, ...messages });
 
-    for (const key in formData) {
-      if (Object.hasOwn(formData, key)) {
-        if (formData[key as keyof FormData] === '') return;
-      }
+    if (formIsValid) {
+      // send formData to API as POST request
+      fetchData(`${BASE_URL}api/users`, 'POST', formData)
+        .catch((err) => {
+          console.dir(err);
+          // TODO: display errors
+        })
+        .finally(() => {
+          // show success message and navigate to login page
+          setSuccess(true);
+        });
     }
-
-    // send formData to API as POST request
-    fetchData(`${BASE_URL}api/users`, 'POST', formData)
-      .catch((err) => {
-        console.error(err);
-        // TODO: display errors
-      })
-      .finally(() => {
-        // show success message and navigate to login page
-        setSuccess(true);
-      });
   }
 
   return (
@@ -103,6 +91,7 @@ export default function SignupPage() {
           method="POST"
           className="grid grid-cols-2 gap-4"
           onSubmit={handleSubmit}
+          noValidate
         >
           <div className="input-container">
             <label htmlFor="firstName">First Name</label>
@@ -206,4 +195,50 @@ export default function SignupPage() {
       </main>
     </>
   );
+}
+
+function validateField(
+  field: HTMLInputElement,
+  passwordField?: HTMLInputElement | null,
+) {
+  let fieldIsValid = field.validity.valid;
+  let message = field.validationMessage;
+
+  // if it's the `passwordConfirm` field and doesn't match `password` field:
+  // mark field invalid and create validation message
+  if (
+    field.name === 'confirmPassword' &&
+    field.value !== passwordField?.value
+  ) {
+    fieldIsValid = false;
+    message = 'Password confirmation must match password.';
+  }
+
+  return { fieldIsValid, message };
+}
+
+function validateForm(form: HTMLFormElement) {
+  const fields = Array.from(form.querySelectorAll('input'));
+  const passwordField = form.querySelector<HTMLInputElement>(
+    'input[name=password]',
+  );
+
+  let formIsValid = true;
+  const messages: Record<string, string> = {};
+
+  fields.forEach((field) => {
+    const { fieldIsValid, message } = validateField(field, passwordField);
+    if (message) console.log(`${field.name}: ${message}`);
+
+    if (!fieldIsValid && message) {
+      // add message
+      messages[field.name] = message;
+      formIsValid = false;
+    } else {
+      // clear message
+      messages[field.name] = '';
+    }
+  });
+
+  return { formIsValid, messages };
 }
