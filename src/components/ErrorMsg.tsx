@@ -1,9 +1,21 @@
+import Icon from '@mdi/react';
+import { mdiAlert } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/alert/
+
 interface ErrorMsgProps {
   msg: string;
 }
 
 export default function ErrorMsg({ msg }: ErrorMsgProps) {
   return (
-    <p className="text-red-600 text-sm sm:text-base leading-snug">{msg}</p>
+    <div className="flex gap-2 sm:gap-1 items-center">
+      <Icon
+        path={mdiAlert}
+        color=""
+        className="h-6 fill-red-600 shrink-0 relative -top-[1px]"
+      />
+      <span className="text-red-600 text-sm sm:text-base leading-tight">
+        {msg}
+      </span>
+    </div>
   );
 }

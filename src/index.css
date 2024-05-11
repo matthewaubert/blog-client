@@ -28,6 +28,11 @@ main {
   @apply px-6;
 }
 
+main {
+  @apply pt-2;
+  @apply pb-6;
+}
+
 path {
   @apply pointer-events-none;
 }
@@ -37,12 +42,6 @@ path {
   @apply border-gray-200;
   @apply shadow-lg;
 }
-
-/* .form {
-  @apply flex;
-  @apply flex-col;
-  @apply gap-4;
-} */
 
 .input-container {
   @apply flex;

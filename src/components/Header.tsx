@@ -44,7 +44,7 @@ export default function Header() {
         <Link to="/">Blog</Link>
       </h1>
       <DropdownMenu
-        icon={<Icon path={mdiMenu} color="#6b7280" className="h-8" />}
+        icon={<Icon path={mdiMenu} color="" className="h-8 fill-gray-500" />}
         className={
           'absolute left-0 right-0 top-[68px] px-8 py-6 ' +
           'max-h-[calc(100vh-68px)] overflow-y-scroll ' +
@@ -52,7 +52,7 @@ export default function Header() {
           'bg-gray-200 border-b border-gray-300 font-bold shadow-lg'
         }
       >
-        <Icon path={mdiMagnify} color="#6b7280" className="h-7" />
+        <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" />
         <Link to="/signup">Sign up</Link>
         <Link to="/login">Log in</Link>
         <hr className="border border-gray-300 w-full" />

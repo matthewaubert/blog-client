@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useFetch from '../utils/use-fetch';
 import { useNavigate } from 'react-router-dom';
-// import ErrorMsg from '../components/ErrorMsg';
+import ErrorMsg from '../components/ErrorMsg';
 import SuccessMsg from '../components/SuccessMsg';
 import { BASE_URL } from '../config';
 
@@ -24,11 +24,14 @@ const emptyFormData: FormData = {
 };
 
 export default function SignupPage() {
-  const [formData, setFormData] = useState(emptyFormData);
+  const [formData, setFormData] = useState({ ...emptyFormData });
+  const [formErrors, setFormErrors] = useState({ ...emptyFormData });
   const [success, setSuccess] = useState(false);
+  const passwordRef = useRef<null | HTMLInputElement>(null);
   const { data, fetchData } = useFetch();
   const navigate = useNavigate();
-  console.log(data);
+  // console.log('formErrors:', formErrors);
+  console.log('data:', data);
 
   // 3 seconds after successful form submission, navigate to login page
   useEffect(() => {
@@ -37,8 +40,34 @@ export default function SignupPage() {
     }
   }, [navigate, success]);
 
+  // update formData and clear form error
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormErrors({ ...formErrors, [e.target.name]: '' });
+  }
+
+  // if input is invalid when it loses focus: set form error
+  function handleInputBlur(e: React.FocusEvent<HTMLInputElement>) {
+    let isValid = e.target.validity.valid;
+    let message = e.target.validationMessage;
+
+    // if it's the `passwordConfirm` field and doesn't match `password` field:
+    // mark field invalid and create validation message
+    if (
+      e.target.name === 'confirmPassword' &&
+      e.target.value !== passwordRef.current?.value
+    ) {
+      isValid = false;
+      message = 'Password confirmation must match password.';
+    }
+
+    if (!isValid && message) {
+      // set form error
+      setFormErrors({ ...formErrors, [e.target.name]: message });
+    } else {
+      // clear form error
+      setFormErrors({ ...formErrors, [e.target.name]: '' });
+    }
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -48,7 +77,7 @@ export default function SignupPage() {
 
     for (const key in formData) {
       if (Object.hasOwn(formData, key)) {
-        if (formData[key as keyof FormData] === undefined) return;
+        if (formData[key as keyof FormData] === '') return;
       }
     }
 
@@ -86,9 +115,10 @@ export default function SignupPage() {
               required
               value={formData.firstName}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               autoFocus
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.firstName && <ErrorMsg msg={formErrors.firstName} />}
           </div>
           <div className="input-container">
             <label htmlFor="lastName">Last Name</label>
@@ -101,8 +131,9 @@ export default function SignupPage() {
               required
               value={formData.lastName}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.lastName && <ErrorMsg msg={formErrors.lastName} />}
           </div>
 
           <div className="input-container col-span-2">
@@ -116,8 +147,9 @@ export default function SignupPage() {
               required
               value={formData.username}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.username && <ErrorMsg msg={formErrors.username} />}
           </div>
           <div className="input-container col-span-2">
             <label htmlFor="email">Email</label>
@@ -130,13 +162,15 @@ export default function SignupPage() {
               required
               value={formData.email}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.email && <ErrorMsg msg={formErrors.email} />}
           </div>
 
           <div className="input-container">
             <label htmlFor="password">Password</label>
             <input
+              ref={passwordRef}
               type="password"
               className="input"
               id="password"
@@ -144,8 +178,9 @@ export default function SignupPage() {
               required
               value={formData.password}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.password && <ErrorMsg msg={formErrors.password} />}
           </div>
           <div className="input-container">
             <label htmlFor="confirmPassword">Confirm Password</label>
@@ -157,8 +192,11 @@ export default function SignupPage() {
               required
               value={formData.confirmPassword}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
-            {/* <ErrorMsg msg="" /> */}
+            {formErrors.confirmPassword && (
+              <ErrorMsg msg={formErrors.confirmPassword} />
+            )}
           </div>
 
           <button type="submit" className="form-btn col-span-2">
