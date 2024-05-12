@@ -1,64 +1,93 @@
 import { useState, useEffect, useCallback } from 'react';
 
+type Opts<U> = {
+  body?: object;
+  errorExtractor?: (data: U) => string;
+  headers?: HeadersInit;
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  mode?: RequestMode;
+};
+
 /**
- * Custom React hook: fetch data from given resource URL and return an object with relevant info.
- * @param {string} [url] - The resource you with to fetch. If not provided, `fetchData` will not automatically run.
- * @param {string} [method] - GET, POST, PUT, DELETE, etc. Optional, defaults to 'GET'.
- * @param {object} [body] - Optional request body object
- * @returns {object} obj w/ 4 properties: `data`, `error`, `loading`, `fetchData`
+ * Returns an object with the fetched data, error message, loading boolean,
+ * and `fetchData` function. If a `resource` is provided, the `fetchData` function
+ * will be run automatically. This hook utilizes the Fetch API. Review the
+ * [MDN docs](https://developer.mozilla.org/en-US/docs/Web/API/fetch) for more info.
+ * @param {string} [resource]
+ * The resource you with to fetch. If provided, `fetchData` will automatically run.
+ * @param {Options} [options] - An object containing any custom settings you want
+ * to apply to the request.
+ * @param {object} [options.body] - Optional request body object
+ * @param {function} [options.errorExtractor] - A function used to pull error messages from your
+ * expected fetch response. It should accept the fetch response object and return a string.
+ * @param {HeadersInit} [options.headers] - Any headers you want to add to your request,
+ * contained within a `Headers` object or an object literal with String values.
+ * @param {string} [options.method] - The request method, e.g. `'GET'`, `'POST'`.
+ * Defaults to `'GET'`.
+ * @param {RequestMode} [options.mode] - The mode you want to use for the request,
+ * e.g., `'cors'`, `'no-cors'`, or `'same-origin'`. Defaults to `'cors'`.
+ * @returns {object} object w/ 4 properties: `data`, `error`, `loading`, `fetchData`
  * - `data` will not be null if request was successful
  * - `error` will not be null if fetch was unsuccessful
  * - `loading` will be true until fetch request is resolved
- * - `fetchData` is an async function with 3 parameters: `url`, `method`, `body`. When called,
- * it fetches the desired resource and sets the `data`, `error`, and `loading` values.
+ * - `fetchData` is an async function with 3 parameters: `resource`, `method`, `body`.
+ * When called, it fetches the desired resource and sets `data`, `error`, and `loading`.
  * - e.g. `{ data: [...], error: null, loading: false, fetchData: function }`
  */
-export default function useFetch<Type>(
-  url?: string, // if not provided, `fetchData` will not automatically run
-  method: string = 'GET', // optional, defaults to 'GET'
-  body?: object, // optional
+export default function useFetch<T>(
+  resource?: string,
+  options?: {
+    body?: object;
+    errorExtractor?: (data: T) => string;
+    headers?: HeadersInit;
+    method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+    mode?: RequestMode;
+  },
 ) {
-  const [data, setData] = useState<Type | null>(null);
+  const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchData = useCallback(
-    async (url: string, method: string, body?: object) => {
-      const bodyJson = body ? JSON.stringify(body) : null;
+  const fetchData = useCallback(async (resource: string, options?: Opts<T>) => {
+    const bodyJson = options?.body ? JSON.stringify(options.body) : null;
 
-      try {
-        const response = await fetch(url, {
-          method: method, // default to 'GET' if no `method` supplied
-          mode: 'cors',
-          headers: { 'Content-Type': 'application/json' },
-          // send `body` arg if supplied, else do not send body
-          ...(bodyJson && { body: bodyJson }),
-        });
+    try {
+      const response = await fetch(resource, {
+        method: options?.method ?? 'GET', // default to 'GET' if no `method` supplied
+        mode: options?.mode ?? 'cors', // default to 'cors' if no `mode` supplied
+        // default to json if no `header` supplied
+        headers: options?.headers ?? { 'Content-Type': 'application/json' },
+        // send `body` arg if supplied, else do not send body
+        ...(bodyJson && { body: bodyJson }),
+      });
 
-        if (!response.ok)
-          throw new Error(
-            `A network error was encountered: status ${response.status}`,
-          );
+      const data = (await response.json()) as T;
 
-        const data = (await response.json()) as Type;
-        setData(data);
-      } catch (err) {
-        setError(getErrorMessage(err));
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        const errorMsg =
+          data && options?.errorExtractor
+            ? options.errorExtractor(data)
+            : `A network error was encountered: status ${response.status}`;
+
+        throw new Error(errorMsg);
       }
-    },
-    [],
-  );
+
+      setData(data);
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // only run this if params are provided to `useFetch`
   useEffect(() => {
-    if (url) {
-      fetchData(url, method, body).catch((err) => {
+    if (resource) {
+      fetchData(resource, options).catch((err) => {
         console.error(err);
       });
     }
-  }, [fetchData, url, method, body]);
+  }, [fetchData, resource, options]);
 
   return { data, error, loading, fetchData };
 }

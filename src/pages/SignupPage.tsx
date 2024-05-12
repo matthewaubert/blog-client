@@ -69,15 +69,10 @@ export default function SignupPage() {
 
     if (formIsValid) {
       // send formData to API as POST request
-      fetchData(`${BASE_URL}api/users`, 'POST', formData)
-        .catch((err) => {
-          console.dir(err);
-          // TODO: display errors
-        })
-        .finally(() => {
-          // show success message and navigate to login page
-          setSuccess(true);
-        });
+      fetchData(`${BASE_URL}api/users`, {
+        body: formData,
+        method: 'POST',
+      }).catch((err) => console.dir(err));
     }
   }
 
