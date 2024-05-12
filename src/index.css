@@ -59,6 +59,12 @@ path {
   @apply shadow-inner;
 }
 
+.input.error {
+  @apply border-2;
+  @apply border-red-700;
+  @apply bg-red-100;
+}
+
 .form-btn {
   @apply bg-blue-500;
   @apply hover:bg-blue-600;

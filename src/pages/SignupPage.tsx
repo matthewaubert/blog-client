@@ -95,7 +95,7 @@ export default function SignupPage() {
             <label htmlFor="firstName">First Name</label>
             <input
               type="text"
-              className="input"
+              className={'input' + (formErrors.firstName && ' error')}
               id="firstName"
               name="firstName"
               placeholder="e.g. Sam"
@@ -111,7 +111,7 @@ export default function SignupPage() {
             <label htmlFor="lastName">Last Name</label>
             <input
               type="text"
-              className="input"
+              className={'input' + (formErrors.lastName && ' error')}
               id="lastName"
               name="lastName"
               placeholder="e.g. Smith"
@@ -127,7 +127,7 @@ export default function SignupPage() {
             <label htmlFor="username">Username</label>
             <input
               type="text"
-              className="input"
+              className={'input' + (formErrors.username && ' error')}
               id="username"
               name="username"
               placeholder="sam.smith"
@@ -142,7 +142,7 @@ export default function SignupPage() {
             <label htmlFor="email">Email</label>
             <input
               type="email"
-              className="input"
+              className={'input' + (formErrors.email && ' error')}
               id="email"
               name="email"
               placeholder="example@email.com"
@@ -160,7 +160,7 @@ export default function SignupPage() {
             <input
               ref={passwordRef}
               type="password"
-              className="input"
+              className={'input' + (formErrors.password && ' error')}
               id="password"
               name="password"
               required
@@ -175,7 +175,7 @@ export default function SignupPage() {
             <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               type="password"
-              className="input"
+              className={'input' + (formErrors.confirmPassword && ' error')}
               id="confirmPassword"
               name="confirmPassword"
               required

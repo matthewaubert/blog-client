@@ -11,9 +11,9 @@ export default function ErrorMsg({ msg }: ErrorMsgProps) {
       <Icon
         path={mdiAlert}
         color=""
-        className="h-6 fill-red-600 shrink-0 relative -top-[1px]"
+        className="h-6 fill-red-700 shrink-0 relative -top-[1px]"
       />
-      <span className="text-red-600 text-sm sm:text-base leading-tight">
+      <span className="text-red-700 text-sm sm:text-base leading-tight">
         {msg}
       </span>
     </div>
