@@ -4,7 +4,10 @@
 export interface ApiResponse<D> {
   success: boolean;
   message: string;
-  errors?: object[];
+  errors?: {
+    msg?: string;
+    message?: string;
+  }[];
   count?: number;
   data: D;
 }

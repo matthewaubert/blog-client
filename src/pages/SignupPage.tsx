@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import useFetch from '../utils/use-fetch';
 import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
-import SuccessMsg from '../components/SuccessMsg';
+import SubmissionMsg from '../components/SubmissionMsg';
+import extractErrorMsg from '../utils/extract-error-msg';
 import { BASE_URL } from '../config';
+import { ApiResponse } from '../types';
 
 interface FormData {
   firstName: string;
@@ -26,19 +28,18 @@ const emptyFormData: FormData = {
 export default function SignupPage() {
   const [formData, setFormData] = useState({ ...emptyFormData });
   const [formErrors, setFormErrors] = useState({ ...emptyFormData });
-  const [success, setSuccess] = useState(false);
   const passwordRef = useRef<null | HTMLInputElement>(null);
-  const { data, error, fetchData } = useFetch();
+  const { data, error, fetchData } = useFetch<ApiResponse<object>>();
   const navigate = useNavigate();
   // console.log('formErrors:', formErrors);
-  console.log('data:', data || error);
+  console.log('data or error:', data || error);
 
   // 3 seconds after successful form submission, navigate to login page
   useEffect(() => {
-    if (success) {
+    if (data?.success) {
       setTimeout(() => navigate('/login'), 2500);
     }
-  }, [navigate, success]);
+  }, [navigate, data]);
 
   // update formData and clear form error
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -71,6 +72,7 @@ export default function SignupPage() {
       // send formData to API as POST request
       fetchData(`${BASE_URL}api/users`, {
         body: formData,
+        errorExtractor: extractErrorMsg,
         method: 'POST',
       }).catch((err) => console.dir(err));
     }
@@ -78,7 +80,8 @@ export default function SignupPage() {
 
   return (
     <>
-      {success && <SuccessMsg />}
+      {data && <SubmissionMsg success={true} msg="Success!" />}
+      {!data && error && <SubmissionMsg success={false} msg={error} />}
       <main className="flex flex-col gap-4">
         <h2>Sign Up</h2>
         <form
@@ -144,6 +147,7 @@ export default function SignupPage() {
               name="email"
               placeholder="example@email.com"
               required
+              minLength={6}
               value={formData.email}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
@@ -160,6 +164,7 @@ export default function SignupPage() {
               id="password"
               name="password"
               required
+              minLength={8}
               value={formData.password}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
@@ -174,6 +179,7 @@ export default function SignupPage() {
               id="confirmPassword"
               name="confirmPassword"
               required
+              minLength={8}
               value={formData.confirmPassword}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
