@@ -55,7 +55,7 @@ export default function SignupPage() {
   return (
     <main className="flex flex-col gap-4">
       <h2>Sign Up</h2>
-      <Form<ApiResponse<object>>
+      <Form<ApiResponse>
         fields={fields}
         btnText="Sign up"
         action={`${BASE_URL}api/users`}

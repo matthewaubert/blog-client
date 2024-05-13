@@ -1,6 +1,6 @@
 import { ApiResponse } from '../types';
 
-export default function extractErrorMsg(data: ApiResponse<object>) {
+export default function extractErrorMsg(data: ApiResponse) {
   let errorMsg = 'A network error was encountered';
 
   if (data.errors && data.errors.length) {

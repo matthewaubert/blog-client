@@ -35,6 +35,7 @@ interface Props<U> {
   action: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   errorExtractor?: (data: U) => string;
+  dataHandler?: (data: U) => void;
   successMsg: string;
   navigateTo?: string;
 }
@@ -59,6 +60,7 @@ export default function Form<T>({
   action,
   method,
   errorExtractor,
+  dataHandler,
   successMsg,
   navigateTo,
 }: Props<T>) {
@@ -71,10 +73,15 @@ export default function Form<T>({
 
   // 3 seconds after successful form submission, navigate to given page
   useEffect(() => {
-    if (data && navigateTo) {
-      setTimeout(() => navigate(navigateTo), 2500);
+    if (data) {
+      if (navigateTo) {
+        setTimeout(() => navigate(navigateTo), 2500);
+      }
+      if (dataHandler) {
+        dataHandler(data);
+      }
     }
-  }, [data, navigate, navigateTo]);
+  }, [data, navigate, navigateTo, dataHandler]);
 
   // update formData and clear form error
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {

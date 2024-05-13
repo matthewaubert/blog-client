@@ -83,7 +83,7 @@ To do:
 
 To do:
 - [x] Refactor Form to separate component?
-- [ ] Login Page
+- [x] Login Page
 - [ ] Logout Page
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?
