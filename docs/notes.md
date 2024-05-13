@@ -71,8 +71,19 @@ To do:
    - [x] Enable User signup
    - [x] Navigate to login page after signup
    - [x] Show success message after signup, before navigation
-   - [ ] Show errors on signup page
-   - [ ] Refactor Form to separate component?
-- [ ] Enable User login and logout
+
+# 5/11/24
+
+To do:
+- [x] Signup Page
+  - [x] Enable immediate form validation
+  - [x] Show form submission errors
+
+# 5/13/24
+
+To do:
+- [x] Refactor Form to separate component?
+- [ ] Login Page
+- [ ] Logout Page
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?

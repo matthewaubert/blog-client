@@ -33,6 +33,10 @@ main {
   @apply pb-6;
 }
 
+.sub-msg-margin {
+  @apply -mx-6;
+}
+
 path {
   @apply pointer-events-none;
 }
