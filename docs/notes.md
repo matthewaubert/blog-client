@@ -84,6 +84,6 @@ To do:
 To do:
 - [x] Refactor Form to separate component?
 - [x] Login Page
-- [ ] Logout Page
+- [x] Create Auth context and enable logout
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?

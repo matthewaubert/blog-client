@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useAuth } from '../utils/auth-utils';
 import useFetch from '../utils/use-fetch';
 import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
@@ -10,13 +11,13 @@ import { BASE_URL } from '../config';
 import { decode } from 'he';
 
 export default function Header() {
-  // TODO: check if window matches media query?
-  // TODO: fetch Categories list from API
+  const { isLoggedIn, logout } = useAuth();
+  const headerRef = useRef<HTMLElement>(null);
   const { data, error, loading } = useFetch<ApiResponse<CategoryData[]>>(
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
-
-  const headerRef = useRef<HTMLElement>(null);
+  
+  // TODO: check if window matches media query?
 
   // add shadow to Header when user scrolls down, remove when scrolls back to top
   useEffect(() => {
@@ -53,8 +54,14 @@ export default function Header() {
         }
       >
         <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" />
-        <Link to="/signup">Sign up</Link>
-        <Link to="/login">Log in</Link>
+        {isLoggedIn ? (
+          <button onClick={logout}>Log out</button>
+        ) : (
+          <>
+            <Link to="/signup">Sign up</Link>
+            <Link to="/login">Log in</Link>
+          </>
+        )}
         <hr className="border border-gray-300 w-full" />
         <>
           {loading && <p>Loading...</p>}

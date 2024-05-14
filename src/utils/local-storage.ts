@@ -6,7 +6,7 @@
  * @param {string} type - Type of storage to check for
  * @returns {boolean}
  */
-export default function isStorageAvailable(type: string) {
+export function isStorageAvailable(type: string) {
   let storage;
   try {
     storage = window[type as keyof WindowLocalStorage];
@@ -34,3 +34,10 @@ export default function isStorageAvailable(type: string) {
     );
   }
 }
+
+/**
+ * Check if `token` is available in `localStorage`
+ * @returns {boolean}
+ */
+export const isTokenAvailable = () =>
+  isStorageAvailable('localStorage') && localStorage.getItem('token') !== null;
