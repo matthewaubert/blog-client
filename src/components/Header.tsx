@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useAuth } from '../utils/auth-utils';
+import { useAuth, isPayloadExpired } from '../utils/auth-utils';
 import useFetch from '../utils/use-fetch';
 import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
@@ -11,12 +11,12 @@ import { BASE_URL } from '../config';
 import { decode } from 'he';
 
 export default function Header() {
-  const { isLoggedIn, logout } = useAuth();
+  const { authData, logout } = useAuth();
   const headerRef = useRef<HTMLElement>(null);
   const { data, error, loading } = useFetch<ApiResponse<CategoryData[]>>(
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
-  
+
   // TODO: check if window matches media query?
 
   // add shadow to Header when user scrolls down, remove when scrolls back to top
@@ -54,7 +54,7 @@ export default function Header() {
         }
       >
         <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" />
-        {isLoggedIn ? (
+        {!isPayloadExpired(authData) ? (
           <button onClick={logout}>Log out</button>
         ) : (
           <>

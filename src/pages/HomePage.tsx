@@ -8,7 +8,7 @@ export default function HomePage() {
   const { data, error, loading } = useFetch<ApiResponse<PostData[]>>(
     `${BASE_URL}api/posts?sort[createdAt]=desc`,
   );
-  console.log(data || error || loading);
+  // console.log(data || error || loading);
 
   return (
     <main className="flex flex-col gap-8">

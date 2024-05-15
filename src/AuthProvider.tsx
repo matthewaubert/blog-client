@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { AuthContext } from './utils/auth-utils';
-import { isStorageAvailable, isTokenAvailable } from './utils/local-storage';
+import { useState, useCallback, useMemo } from 'react';
+import { AuthContext, decodeToken } from './utils/auth-utils';
+import { isStorageAvailable, getJwtPayload } from './utils/local-storage';
 import { ApiResponse } from './types';
 
 interface Props {
@@ -8,31 +8,33 @@ interface Props {
 }
 
 export default function AuthProvider({ children }: Props) {
-  const [isLoggedIn, setIsLoggedIn] = useState(isTokenAvailable());
-  const [token, setToken] = useState<string | null>(null);
+  const [authData, setAuthData] = useState(getJwtPayload());
 
-  // if given data has a token and `localStorage` is available: set token in `localStorage`
-  function login(data: ApiResponse) {
+  // if given data has a token and `localStorage` is available:
+  // store token in `localStorage` and set `authData` in app state
+  const login = useCallback((data: ApiResponse) => {
     if (data.token && isStorageAvailable('localStorage')) {
+      console.log('stored!', data.token);
       localStorage.setItem('token', data.token);
-      setToken(data.token);
-      setIsLoggedIn(true);
+      setAuthData(decodeToken(data.token));
     }
-  }
+  }, []);
 
-  // if `localStorage` is available and it has a token: remove token
-  function logout() {
-    if (isTokenAvailable()) {
+  // remove token from `localStorage` and `authData` from app state
+  const logout = useCallback(() => {
+    if (getJwtPayload() !== null) {
       localStorage.removeItem('token');
     }
 
-    setToken(null);
-    setIsLoggedIn(false);
-  }
+    setAuthData(null); // remove `authData` from state
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({ authData, login, logout }),
+    [authData, login, logout],
+  );
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, token }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 }

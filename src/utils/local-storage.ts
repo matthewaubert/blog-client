@@ -1,5 +1,7 @@
 // MDN reference: https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
 
+import { decodeToken, isPayloadExpired } from './auth-utils';
+
 /**
  * Check if storage of given type is available. Return boolean value.
  * [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API).
@@ -36,8 +38,22 @@ export function isStorageAvailable(type: string) {
 }
 
 /**
- * Check if `token` is available in `localStorage`
- * @returns {boolean}
+ * If there's a valid token in localStorage: return the decoded payload from the token.
+ * If there's an invalid token in `localStorage`: remove it and return `null`.
+ * Else: return `null`.
+ * @returns {JwtPayload | null}
  */
-export const isTokenAvailable = () =>
-  isStorageAvailable('localStorage') && localStorage.getItem('token') !== null;
+export function getJwtPayload() {
+  if (isStorageAvailable('localStorage')) {
+    const token = localStorage.getItem('token');
+    const authData = decodeToken(token);
+
+    if (authData && !isPayloadExpired(authData)) {
+      return authData;
+    } else {
+      localStorage.removeItem('token');
+    }
+  }
+
+  return null;
+}

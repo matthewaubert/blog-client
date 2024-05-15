@@ -84,6 +84,12 @@ To do:
 To do:
 - [x] Refactor Form to separate component?
 - [x] Login Page
+
+# 5/14/23
+
+To do:
 - [x] Create Auth context and enable logout
+- [x] Decode token and store in app AuthProvider context
+- [x] Memoize AuthProvider
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?
