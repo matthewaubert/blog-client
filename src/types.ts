@@ -48,3 +48,22 @@ export interface CategoryData {
   name: string;
   slug: string;
 }
+
+export interface CommentData {
+  _id: string;
+  text: string;
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    slug: string;
+  };
+  post: {
+    _id: string;
+    title: string;
+    slug: string;
+  };
+  createdAt: string;
+  updatedAt: string
+}

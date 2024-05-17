@@ -91,5 +91,24 @@ To do:
 - [x] Create Auth context and enable logout
 - [x] Decode token and store in app AuthProvider context
 - [x] Memoize AuthProvider
+
+# 5/16/24
+
+To do:
+- [x] Display comments on PostPage
+  - Anyone can see comments
+
+# 5/17/24
+
+To do:
+- [ ] Create form to write comments
+  - Only users who are logged in can make new comments
+  - If not logged in, include a message explaining you need to be logged in to write comments
+- [ ] Footer?
+- [ ] Choose name
+- [ ] Style
+  - [ ] Choose typeface
+  - [ ] Make responsive
+- [ ] Create `LoadingIndicator`
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?
