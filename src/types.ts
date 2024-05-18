@@ -1,8 +1,8 @@
 /**
  * Response from Blog API
- * @param {any} D - expected response data type, e.g. `PostData[]`. Defaults to `undefined`.
+ * @param {any} D - expected response data type, e.g. `PostData[]`. Defaults to `unknown`.
  */
-export interface ApiResponse<D = void> {
+export interface ApiResponse<D = unknown> {
   success: boolean;
   message: string;
   errors?: {
@@ -11,7 +11,7 @@ export interface ApiResponse<D = void> {
   }[];
   count?: number;
   token?: string;
-  data: D extends void ? undefined : D;
+  data: D;
 }
 
 export interface PostData {

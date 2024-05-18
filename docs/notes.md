@@ -98,10 +98,10 @@ To do:
 - [x] Display comments on PostPage
   - Anyone can see comments
 
-# 5/17/24
+# 5/18/24
 
 To do:
-- [ ] Create form to write comments
+- [x] Create form to write comments
   - Only users who are logged in can make new comments
   - If not logged in, include a message explaining you need to be logged in to write comments
 - [ ] Footer?

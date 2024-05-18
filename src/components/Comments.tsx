@@ -1,13 +1,16 @@
+import { useState, useCallback, useMemo } from 'react';
+import { useAuth } from '../utils/auth-utils';
 import useFetch from '../utils/use-fetch';
 import Comment from './Comment';
 import Form from './Form';
+import { Link } from 'react-router-dom';
 import { BASE_URL } from '../config';
 import { ApiResponse, CommentData } from '../types';
 import extractErrorMsg from '../utils/extract-error-msg';
 
 const fields = [
   {
-    name: 'comment',
+    name: 'text',
     type: 'textarea',
     placeholder: 'Post a response...',
     rows: 5,
@@ -21,30 +24,57 @@ interface Props {
 }
 
 export default function Comments({ postSlug }: Props) {
+  const { authData } = useAuth();
   const { data, error } = useFetch<ApiResponse<CommentData[]>>(
     `${BASE_URL}api/posts/${postSlug}/comments`,
   );
+  const [newComments, setNewComments] = useState<CommentData[]>([]);
+
+  const dataHandler = useCallback(
+    (data: ApiResponse<CommentData>) =>
+      setNewComments((nc) => [...nc, data.data]),
+    [setNewComments],
+  );
+
+  // array of fetched comments and newly-submitted comments
+  const allComments = useMemo(() => {
+    const fetchedData = data?.data ?? [];
+    return [...fetchedData, ...newComments];
+  }, [data, newComments]);
+  console.log('all comments:', allComments);
 
   return (
     <section className="flex flex-col gap-2">
       <h3>Comments</h3>
       {error && <p>{error}</p>}
-      {data && data.data.length ? (
-        data.data.map((comment) => <Comment key={comment._id} data={comment} />)
+      {allComments.length ? (
+        allComments.map((comment) => (
+          <Comment key={comment._id} data={comment} />
+        ))
       ) : (
-        <p>Hm, there don&apos;t seem to be any comments on this post yet...</p>
+        <p>
+          Hm, there doesn&apos;t seem to be any comments on this post yet...
+        </p>
       )}
 
-      <Form<ApiResponse>
-        className="mt-3"
-        fields={fields}
-        btnText="Post response"
-        action={`${BASE_URL}api/posts/${postSlug}/comments`}
-        method="POST"
-        errorExtractor={extractErrorMsg}
-        successMsg="Success!"
-        // navigateTo={`${BASE_URL}api/posts/${postSlug}`}
-      />
+      {authData ? (
+        <Form<ApiResponse<CommentData>>
+          className="mt-4"
+          fields={fields}
+          btnText="Post response"
+          action={`${BASE_URL}api/posts/${postSlug}/comments`}
+          method="POST"
+          errorExtractor={extractErrorMsg}
+          dataHandler={dataHandler}
+          navigateTo={window.location.pathname}
+        />
+      ) : (
+        <p className="mt-4">
+          Create an account to write a response.
+          <br />
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      )}
     </section>
   );
 }
