@@ -4,33 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 import SubmissionMsg from '../components/SubmissionMsg';
 
-interface FormData {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+interface Field {
+  name: string;
+  label?: string;
+  type: string;
+  placeholder?: string;
+  rows?: number;
+  required?: boolean;
+  colSpan?: boolean;
 }
 
-const emptyFormData: FormData = {
-  firstName: '',
-  lastName: '',
-  username: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
-};
-
 interface Props<U> {
-  fields: {
-    name: string;
-    label: string;
-    type: string;
-    placeholder?: string;
-    required?: boolean;
-    colSpan?: boolean;
-  }[];
+  className?: string;
+  fields: Field[];
   btnText?: string;
   action: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -55,6 +41,7 @@ interface Props<U> {
  * @returns {JSX.Element}
  */
 export default function Form<T>({
+  className,
   fields,
   btnText,
   action,
@@ -64,8 +51,9 @@ export default function Form<T>({
   successMsg,
   navigateTo,
 }: Props<T>) {
-  const [formData, setFormData] = useState({ ...emptyFormData });
-  const [formErrors, setFormErrors] = useState({ ...emptyFormData });
+  const formFields = getFormFields(fields);
+  const [formData, setFormData] = useState({ ...formFields });
+  const [formErrors, setFormErrors] = useState({ ...formFields });
   const passwordRef = useRef<null | HTMLInputElement>(null);
   const { data, error, fetchData } = useFetch<T>();
   const navigate = useNavigate();
@@ -84,13 +72,17 @@ export default function Form<T>({
   }, [data, navigate, navigateTo, dataHandler]);
 
   // update formData and clear form error
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setFormErrors({ ...formErrors, [e.target.name]: '' });
   }
 
   // if field is invalid when it loses focus: set form error
-  function handleInputBlur(e: React.FocusEvent<HTMLInputElement>) {
+  function handleInputBlur(
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
     const { fieldIsValid, message } = validateField(
       e.target,
       passwordRef.current,
@@ -127,7 +119,9 @@ export default function Form<T>({
       <form
         action=""
         method={method}
-        className="grid grid-cols-2 gap-4"
+        className={
+          'grid grid-cols-2 gap-4' + (className ? ` ${className}` : '')
+        }
         onSubmit={handleSubmit}
         noValidate
       >
@@ -136,24 +130,36 @@ export default function Form<T>({
             key={field.name}
             className={'input-container' + (field.colSpan ? ' col-span-2' : '')}
           >
-            <label htmlFor={field.name}>{field.label}</label>
-            <input
-              ref={field.name === 'password' ? passwordRef : undefined}
-              type={field.type}
-              className={
-                'input' + (formErrors[field.name as keyof FormData] && ' error')
-              }
-              id={field.name}
-              name={field.name}
-              placeholder={field.placeholder}
-              required={field.required ?? false}
-              value={formData[field.name as keyof FormData] ?? ''}
-              onChange={handleInputChange}
-              onBlur={handleInputBlur}
-              autoFocus={i === 0}
-            />
-            {formErrors[field.name as keyof FormData] && (
-              <ErrorMsg msg={formErrors[field.name as keyof FormData]} />
+            {field.label && <label htmlFor={field.name}>{field.label}</label>}
+            {field.type !== 'textarea' ? (
+              <input
+                ref={field.name === 'password' ? passwordRef : undefined}
+                type={field.type}
+                className={'input' + (formErrors[field.name] && ' error')}
+                id={field.name}
+                name={field.name}
+                placeholder={field.placeholder}
+                required={field.required ?? false}
+                value={formData[field.name] ?? ''}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                autoFocus={i === 0}
+              />
+            ) : (
+              <textarea
+                className={'input' + (formErrors[field.name] && ' error')}
+                id={field.name}
+                name={field.name}
+                placeholder={field.placeholder}
+                rows={field.rows}
+                required={field.required ?? false}
+                value={formData[field.name] ?? ''}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+              />
+            )}
+            {formErrors[field.name] && (
+              <ErrorMsg msg={formErrors[field.name]} />
             )}
           </div>
         ))}
@@ -167,7 +173,7 @@ export default function Form<T>({
 }
 
 function validateField(
-  field: HTMLInputElement,
+  field: HTMLInputElement | HTMLTextAreaElement,
   passwordField?: HTMLInputElement | null,
 ) {
   let fieldIsValid = field.validity.valid;
@@ -187,7 +193,9 @@ function validateField(
 }
 
 function validateForm(form: HTMLFormElement) {
-  const fields = Array.from(form.querySelectorAll('input'));
+  const fields: (HTMLInputElement | HTMLTextAreaElement)[] = Array.from(
+    form.querySelectorAll('input, textarea'),
+  );
   const passwordField = form.querySelector<HTMLInputElement>(
     'input[name=password]',
   );
@@ -210,4 +218,14 @@ function validateForm(form: HTMLFormElement) {
   });
 
   return { formIsValid, messages };
+}
+
+function getFormFields(fields: Field[]) {
+  return fields.reduce(
+    (accumulator, field) => {
+      accumulator[field.name] = '';
+      return accumulator;
+    },
+    {} as Record<string, string>,
+  );
 }
