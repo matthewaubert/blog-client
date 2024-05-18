@@ -23,7 +23,7 @@ interface Props<U> {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   errorExtractor?: (data: U) => string;
   dataHandler?: (data: U) => void;
-  successMsg: string;
+  successMsg?: string;
   navigateTo?: string;
 }
 
@@ -37,7 +37,7 @@ interface Props<U> {
  * Defaults to `'GET'`.
  * @param {Function} [props.errorExtractor] - A function used to pull error messages from your
  * expected fetch response. It should accept the fetch response object and return a string.
- * @param {string} props.successMsg - Message to display on successful form submission
+ * @param {string} [props.successMsg] - Message to display on successful form submission
  * @param {string} [props.navigateTo] - URL to navigate to on successful form submission
  * @returns {JSX.Element}
  */
@@ -60,17 +60,20 @@ export default function Form<T>({
   const navigate = useNavigate();
   if (data) console.log('data:', data);
 
-  // 3 seconds after successful form submission, navigate to given page
   useEffect(() => {
+    // if successful submission
     if (data) {
+      // 3 seconds after successful form submission, navigate to given page
       if (navigateTo) {
         setTimeout(() => navigate(navigateTo), 2500);
       }
       if (dataHandler) {
         dataHandler(data);
       }
+      // clear form fields
+      setFormData(() => ({ ...getFormFields(fields) }));
     }
-  }, [data, navigate, navigateTo, dataHandler]);
+  }, [data, navigate, navigateTo, dataHandler, fields]);
 
   // update formData and clear form error
   function handleInputChange(
@@ -122,7 +125,7 @@ export default function Form<T>({
 
   return (
     <>
-      {data && <SubmissionMsg success={true} msg={successMsg} />}
+      {data && successMsg && <SubmissionMsg success={true} msg={successMsg} />}
       {!data && error && <SubmissionMsg success={false} msg={error} />}
       <form
         action=""
