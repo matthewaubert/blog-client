@@ -37,6 +37,14 @@ export function isStorageAvailable(type: string) {
   }
 }
 
+export function getToken() {
+  if (isStorageAvailable('localStorage')) {
+    return localStorage.getItem('token');
+  }
+
+  return null;
+}
+
 /**
  * If there's a valid token in localStorage: return the decoded payload from the token.
  * If there's an invalid token in `localStorage`: remove it and return `null`.

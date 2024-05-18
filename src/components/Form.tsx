@@ -3,6 +3,7 @@ import useFetch from '../utils/use-fetch';
 import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 import SubmissionMsg from '../components/SubmissionMsg';
+import { getToken } from '../utils/local-storage';
 
 interface Field {
   name: string;
@@ -103,11 +104,18 @@ export default function Form<T>({
     setFormErrors({ ...formErrors, ...messages });
 
     if (formIsValid) {
+      const token = getToken(); // get JWT from `localStorage`
+
       // send formData to API as POST request
       fetchData(action, {
         body: formData,
         errorExtractor,
         method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          // send "Authorization" header if JWT in `localStorage`
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
       }).catch((err) => console.dir(err));
     }
   }
