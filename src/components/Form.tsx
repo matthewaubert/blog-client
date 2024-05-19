@@ -58,7 +58,7 @@ export default function Form<T>({
   const passwordRef = useRef<null | HTMLInputElement>(null);
   const { data, error, fetchData } = useFetch<T>();
   const navigate = useNavigate();
-  if (data) console.log('data:', data);
+  // if (data) console.log('data:', data);
 
   useEffect(() => {
     // if successful submission
@@ -91,7 +91,7 @@ export default function Form<T>({
       e.target,
       passwordRef.current,
     );
-    if (message) console.log(`${e.target.name}: ${message}`);
+    // if (message) console.log(`${e.target.name}: ${message}`);
 
     setFormErrors({
       ...formErrors,
@@ -216,7 +216,7 @@ function validateForm(form: HTMLFormElement) {
 
   fields.forEach((field) => {
     const { fieldIsValid, message } = validateField(field, passwordField);
-    if (message) console.log(`${field.name}: ${message}`);
+    // if (message) console.log(`${field.name}: ${message}`);
 
     if (!fieldIsValid && message) {
       // add message

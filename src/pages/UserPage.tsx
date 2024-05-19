@@ -17,7 +17,7 @@ export default function UserPage() {
     data?.data.filter(
       (post) => post.isPublished && post.user.slug === userSlug,
     ) ?? [];
-  if (userPosts) console.log(userPosts);
+  // if (userPosts) console.log(userPosts);
 
   return (
     <main className="flex flex-col gap-12">

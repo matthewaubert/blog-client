@@ -17,8 +17,6 @@ export default function Header() {
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
 
-  // TODO: check if window matches media query?
-
   // add shadow to Header when user scrolls down, remove when scrolls back to top
   useEffect(() => {
     function onScroll() {
@@ -63,7 +61,7 @@ export default function Header() {
       >
         {/* <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" /> */}
         {!isPayloadExpired(authData) ? (
-          <Link to="/" onClick={logout}>
+          <Link to="/" className="text-lg" onClick={logout}>
             Log out
           </Link>
         ) : (

@@ -14,7 +14,7 @@ export default function AuthProvider({ children }: Props) {
   // store token in `localStorage` and set `authData` in app state
   const login = useCallback((data: ApiResponse) => {
     if (data.token && isStorageAvailable('localStorage')) {
-      console.log('stored!', data.token);
+      // console.log('stored!', data.token);
       localStorage.setItem('token', data.token);
       setAuthData(decodeToken(data.token));
     }

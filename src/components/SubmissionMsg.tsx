@@ -9,7 +9,7 @@ interface Props {
  * @param {Props} props
  * @param {} props.success - Whether form submission was a success or not
  * @param {} props.msg - Message to display
- * @returns 
+ * @returns
  */
 export default function SubmissionMsg({ success, msg }: Props) {
   return (

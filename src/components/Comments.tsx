@@ -41,7 +41,7 @@ export default function Comments({ postSlug }: Props) {
     const fetchedData = data?.data ?? [];
     return [...fetchedData, ...newComments];
   }, [data, newComments]);
-  console.log('all comments:', allComments);
+  // console.log('all comments:', allComments);
 
   return (
     <section className="flex flex-col gap-4">
@@ -52,9 +52,7 @@ export default function Comments({ postSlug }: Props) {
           <Comment key={comment._id} data={comment} />
         ))
       ) : (
-        <p>
-          Hm, there doesn&apos;t seem to be any comments on this post yet...
-        </p>
+        <p>Hm, there don&apos;t seem to be any comments on this post yet...</p>
       )}
 
       {authData ? (

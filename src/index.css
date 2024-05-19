@@ -41,20 +41,6 @@ nav {
   @apply py-6;
 }
 
-.splash {
-  @apply px-6;
-  @apply md:px-7;
-  @apply lg:px-[calc((100vw-(1024px-56px))/2)];
-  @apply h-[calc(100vh-68px)];
-  background: linear-gradient(217deg, #1e40af, transparent 71%),
-    linear-gradient(127deg, #60a5fa, transparent 71%),
-    linear-gradient(336deg, #dbeafe, transparent 71%), #38bdf8;
-  /* background: linear-gradient(217deg, #075985, transparent 71%),
-    linear-gradient(127deg, #0ea5e9, transparent 71%),
-    linear-gradient(336deg, #7dd3fc, transparent 71%),
-    #0ea5e9; */
-}
-
 main {
   @apply pt-2;
   @apply pb-10;
@@ -66,6 +52,16 @@ main {
   @apply -mx-6;
   @apply md:-mx-7;
   @apply lg:mx-0;
+}
+
+.splash {
+  @apply px-6;
+  @apply md:px-7;
+  @apply lg:px-[calc((100vw-(1024px-56px))/2)];
+  @apply h-[calc(100%-68px)];
+  background: linear-gradient(217deg, #1e40af, transparent 71%),
+    linear-gradient(127deg, #60a5fa, transparent 71%),
+    linear-gradient(336deg, #dbeafe, transparent 71%), #38bdf8;
 }
 
 .loading-indicator {

@@ -25,7 +25,7 @@ const fields = [
 
 export default function LoginPage() {
   const { login } = useAuth();
-  
+
   return (
     <main className="flex flex-col gap-4">
       <h2>Log In</h2>

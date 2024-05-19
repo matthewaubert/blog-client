@@ -65,5 +65,5 @@ export interface CommentData {
     slug: string;
   };
   createdAt: string;
-  updatedAt: string
+  updatedAt: string;
 }

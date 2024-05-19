@@ -117,6 +117,6 @@ To do:
 To do:
 - [x] Develop `LoadingIndicator`
 - [x] Develop error page
-- [ ] Comment out console.logs
+- [x] Clean up, comment out console.logs
 - [ ] Write a bit in README
 - [ ] Deploy

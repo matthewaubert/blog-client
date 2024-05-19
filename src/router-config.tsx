@@ -26,10 +26,6 @@ const routerConfig = [
         element: <LoginPage />,
       },
       {
-        path: 'logout',
-        // element: </>,
-      },
-      {
         path: 'users/:userSlug',
         element: <UserPage />,
       },
