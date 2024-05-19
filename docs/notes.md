@@ -118,5 +118,6 @@ To do:
 - [x] Develop `LoadingIndicator`
 - [x] Develop error page
 - [x] Clean up, comment out console.logs
+- [x] Adjust Splash height to account for mobile browsers with address bar
 - [ ] Write a bit in README
 - [ ] Deploy

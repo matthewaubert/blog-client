@@ -1,7 +1,25 @@
+import { useEffect } from 'react';
+
 export default function Splash() {
+  // reset height to account for mobile browsers with address bar
+  useEffect(() => {
+    function resetHeight() {
+      document.documentElement.style.setProperty(
+        '--viewport-height',
+        `${window.innerHeight}px`,
+      );
+    }
+
+    resetHeight();
+    window.addEventListener('resize', resetHeight);
+
+    return () => {
+      window.removeEventListener('resize', resetHeight);
+    };
+  }, []);
+
   function scroll() {
-    // get window height
-    scrollTo({ top: window.innerHeight - 68, behavior: 'smooth' });
+    scrollTo({ top: window.innerHeight - 67, behavior: 'smooth' });
   }
 
   return (

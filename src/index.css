@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  --viewport-height: 100vh;
   line-height: 1.5;
   @apply text-gray-800;
 }
@@ -58,7 +59,7 @@ main {
   @apply px-6;
   @apply md:px-7;
   @apply lg:px-[calc((100vw-(1024px-56px))/2)];
-  @apply h-[calc(100%-68px)];
+  height: calc(var(--viewport-height) - 68px);
   background: linear-gradient(217deg, #1e40af, transparent 71%),
     linear-gradient(127deg, #60a5fa, transparent 71%),
     linear-gradient(336deg, #dbeafe, transparent 71%), #38bdf8;
