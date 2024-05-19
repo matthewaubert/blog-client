@@ -9,7 +9,7 @@ interface Props {
 export default function Comment({ data }: Props) {
   return (
     <div>
-      <time dateTime={data.createdAt} className="text-gray-400">
+      <time dateTime={data.createdAt} className="text-gray-500 text-sm">
         {format(data.createdAt, 'PPPp')}
       </time>
       <p>

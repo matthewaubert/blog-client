@@ -5,7 +5,7 @@
 :root {
   font-family: sans-serif;
   line-height: 1.5;
-  @apply text-gray-900;
+  @apply text-gray-800;
 }
 
 h1 {
@@ -16,25 +16,38 @@ h1 {
 h2 {
   @apply font-bold;
   @apply text-2xl;
+  @apply sm:text-3xl;
 }
 
 h3 {
   @apply font-bold;
   @apply text-xl;
+  @apply sm:text-2xl;
 }
 
 header,
 main {
+  @apply mx-auto;
   @apply px-6;
+  @apply md:px-7;
+}
+
+nav {
+  @apply px-8;
+  @apply py-6;
 }
 
 main {
   @apply pt-2;
-  @apply pb-6;
+  @apply pb-7;
+  @apply max-w-screen-lg;
 }
 
+/* negative margin to counteract `main`'s padding while small screen */
 .sub-msg-margin {
   @apply -mx-6;
+  @apply md:-mx-7;
+  @apply lg:mx-0;
 }
 
 path {
@@ -45,6 +58,16 @@ path {
   @apply border-b;
   @apply border-gray-200;
   @apply shadow-lg;
+}
+
+a {
+  @apply transition-all;
+  @apply hover:text-blue-500;
+}
+
+.login {
+  @apply text-blue-500;
+  @apply font-bold;
 }
 
 .input-container {
@@ -70,6 +93,7 @@ path {
 }
 
 .form-btn {
+  @apply transition-all;
   @apply bg-blue-500;
   @apply hover:bg-blue-600;
   @apply text-white;

@@ -1,4 +1,5 @@
 import Form from '../components/Form';
+import { Link } from 'react-router-dom';
 import { BASE_URL } from '../config';
 import { ApiResponse } from '../types';
 import extractErrorMsg from '../utils/extract-error-msg';
@@ -64,6 +65,12 @@ export default function SignupPage() {
         successMsg="Success!"
         navigateTo="/login"
       />
+      <p>
+        Already have an account?{' '}
+        <Link to="/login" className="login">
+          Log in
+        </Link>
+      </p>
     </main>
   );
 }

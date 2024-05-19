@@ -37,13 +37,9 @@ export default function UserPage() {
       {categoryError && <p>{categoryError}</p>}
       {postError && <p>{postError}</p>}
 
-      {categoryData && (
-        <h2>
-          Category: {categoryData.data.name}
-        </h2>
-      )}
+      {categoryData && <h2>Category: {categoryData.data.name}</h2>}
       {categoryPosts.length ? (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-12">
           {categoryPosts.map(
             (post) =>
               post.isPublished && <PostThumbnail key={post._id} data={post} />,

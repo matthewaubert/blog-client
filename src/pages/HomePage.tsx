@@ -11,7 +11,7 @@ export default function HomePage() {
   // console.log(data || error || loading);
 
   return (
-    <main className="flex flex-col gap-8">
+    <main className="flex flex-col gap-12">
       {loading && <LoadingIndicator />}
       {error && <p>{error}</p>}
       {data &&

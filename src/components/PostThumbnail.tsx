@@ -12,32 +12,35 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
   const postUrl = `/posts/${data.slug}`;
 
   return (
-    <article className="grid gap-1">
+    <article className="grid gap-x-5 lg:gap-x-6 gap-y-2 sm:grid-cols-[1fr_2fr] leading-snug">
       <Link to={postUrl}>
         <Image
           src={data.displayImg?.url ? data.displayImg.url : ''}
           alt=""
-          className="aspect-[3_/_2] mb-1"
+          className="aspect-[3_/_2] mb-1 sm:mb-0"
         />
       </Link>
-      <h3>
-        <Link to={postUrl}>{decode(data.title)}</Link>
-      </h3>
-      <time dateTime={data.createdAt} className="text-gray-400">
-        {format(data.createdAt, 'PPP')}
-      </time>
-      <p>
-        by:{' '}
-        <Link to={`/users/${data.user.slug}`}>
-          {decode(data.user.username)}
+      <div className="flex flex-col gap-2 lg:gap-3 leading-snug">
+        <h3 className="sm:-mt-1">
+          <Link to={postUrl}>{decode(data.title)}</Link>
+        </h3>
+        <div className="text-gray-500 flex gap-2 sm:gap-3 items-center">
+          <Link to={`/users/${data.user.slug}`}>
+            {decode(data.user.username)}
+          </Link>
+          <p>•</p>
+          <time dateTime={data.createdAt}>{format(data.createdAt, 'PPP')}</time>
+        </div>
+        <p className="line-clamp-3 text-ellipsis">
+          {trimString(decode(data.content))}
+        </p>
+        <Link
+          to={postUrl}
+          className="text-sm text-gray-500 underline underline-offset-8"
+        >
+          Read more
         </Link>
-      </p>
-      <p className="line-clamp-5 text-ellipsis">
-        {trimString(decode(data.content))}
-      </p>
-      <Link to={postUrl} className="text-sm underline">
-        Read more
-      </Link>
+      </div>
     </article>
   );
 }

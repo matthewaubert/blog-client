@@ -24,25 +24,27 @@ export default function PostPage() {
   }
 
   return (
-    <main className="flex flex-col gap-8">
+    <main className="flex flex-col gap-8 max-w-screen-md">
       {loading && <LoadingIndicator />}
       {data && (
-        <article className="flex flex-col gap-1">
+        <article className="flex flex-col gap-4">
           <Image
             src={data.displayImg?.url ? data.displayImg.url : ''}
             alt=""
             className="aspect-[3_/_2] mb-1"
           />
-          <h2>{decode(data.title)}</h2>
-          <time dateTime={data.createdAt} className="text-gray-400">
-            {format(data.createdAt, 'PPP')}
-          </time>
-          <p>
-            by:{' '}
-            <Link to={`/users/${data.user.slug}`}>
-              {decode(data.user.username)}
-            </Link>
-          </p>
+          <div>
+            <h2>{decode(data.title)}</h2>
+            <div className="text-gray-500 flex gap-2 sm:gap-3 items-center mt-1">
+              <Link to={`/users/${data.user.slug}`}>
+                {decode(data.user.username)}
+              </Link>
+              <p>•</p>
+              <time dateTime={data.createdAt}>
+                {format(data.createdAt, 'PPP')}
+              </time>
+            </div>
+          </div>
           <p className="">{decode(data.content)}</p>
         </article>
       )}

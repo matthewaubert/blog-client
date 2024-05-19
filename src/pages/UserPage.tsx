@@ -20,7 +20,7 @@ export default function UserPage() {
   if (userPosts) console.log(userPosts);
 
   return (
-    <main className="flex flex-col gap-4">
+    <main className="flex flex-col gap-12">
       {loading && <LoadingIndicator />}
       {error && <p>{error}</p>}
       {userPosts.length ? (

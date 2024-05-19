@@ -104,11 +104,13 @@ To do:
 - [x] Create form to write comments
   - Only users who are logged in can make new comments
   - If not logged in, include a message explaining you need to be logged in to write comments
-- [ ] Footer?
-- [ ] Choose name
 - [ ] Style
+  - [x] Layout
+  - [x] Colors
+  - [x] Make responsive
   - [ ] Choose typeface
-  - [ ] Make responsive
+- [ ] Choose name
 - [ ] Create `LoadingIndicator`
+- [ ] Footer?
 - [ ] Build useMediaQuery hook?
 - [ ] Add `url` virtual property on Posts, Users, Categories?

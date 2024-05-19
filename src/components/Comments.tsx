@@ -44,7 +44,7 @@ export default function Comments({ postSlug }: Props) {
   console.log('all comments:', allComments);
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-4">
       <h3>Comments</h3>
       {error && <p>{error}</p>}
       {allComments.length ? (
@@ -72,7 +72,10 @@ export default function Comments({ postSlug }: Props) {
         <p className="mt-4">
           Create an account to write a response.
           <br />
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account?{' '}
+          <Link to="/login" className="login">
+            Log in
+          </Link>
         </p>
       )}
     </section>
