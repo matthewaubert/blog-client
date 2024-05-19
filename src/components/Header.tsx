@@ -4,8 +4,8 @@ import useFetch from '../utils/use-fetch';
 import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
 import Icon from '@mdi/react';
-import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
-import { mdiMenu } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/menu/
+// import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
+import { mdiChevronDown } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/chevron-down/
 import { ApiResponse, CategoryData } from '../types';
 import { BASE_URL } from '../config';
 import { decode } from 'he';
@@ -45,17 +45,23 @@ export default function Header() {
         <Link to="/">Blog</Link>
       </h1>
       <DropdownMenu
-        icon={<Icon path={mdiMenu} color="" className="h-8 fill-gray-500" />}
+        icon={
+          <Icon
+            path={mdiChevronDown}
+            color=""
+            className="h-9 fill-gray-500 hover:fill-blue-500"
+          />
+        }
         className={
-          'absolute left-0 right-0 top-[68px] px-8 py-6 ' +
+          'absolute left-0 right-0 top-[68px] ' +
           'max-h-[calc(100vh-68px)] overflow-y-scroll ' +
           'flex flex-col items-start gap-3 ' +
           'bg-gray-200 border-b border-gray-300 font-bold shadow-lg'
         }
       >
-        <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" />
+        {/* <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" /> */}
         {!isPayloadExpired(authData) ? (
-          <button onClick={logout}>Log out</button>
+          <Link to="/" onClick={logout}>Log out</Link>
         ) : (
           <>
             <Link to="/signup">Sign up</Link>

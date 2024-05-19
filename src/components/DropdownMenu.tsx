@@ -53,7 +53,11 @@ export default function DropdownMenu({
 
   return (
     <>
-      <button ref={buttonRef} onClick={() => setIsOpen(!isOpen)}>
+      <button
+        ref={buttonRef}
+        className={'transition-all' + (isOpen ? ' rotate-180' : '')}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {icon}
       </button>
       {isOpen && (
