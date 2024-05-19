@@ -20,7 +20,7 @@ export default function PostPage() {
   // console.log(responseData || loading);
 
   if (error) {
-    throw new Error('A post with this name does not exist.');
+    throw new Error('A post with that name does not exist.');
   }
 
   return (

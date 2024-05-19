@@ -15,6 +15,10 @@ export default function UserPage() {
     `${BASE_URL}api/categories/${categorySlug}`,
   );
 
+  if (categoryError) {
+    throw new Error('A category with that name does not exist.');
+  }
+
   const {
     data: postData,
     error: postError,
@@ -34,7 +38,6 @@ export default function UserPage() {
   return (
     <main className="flex flex-col gap-4">
       {(categoryLoading || postLoading) && <LoadingIndicator />}
-      {categoryError && <p>{categoryError}</p>}
       {postError && <p>{postError}</p>}
 
       {categoryData && <h2>Category: {categoryData.data.name}</h2>}
