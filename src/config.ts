@@ -3,7 +3,7 @@ enum Environment {
   PROD,
 }
 
-export const ENV = Environment.DEV;
+export const ENV = Environment.PROD;
 
 export const BASE_URL = (() => {
   switch (ENV as Environment) {

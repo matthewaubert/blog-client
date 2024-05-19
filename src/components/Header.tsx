@@ -3,7 +3,7 @@ import { useAuth, isPayloadExpired } from '../utils/auth-utils';
 import useFetch from '../utils/use-fetch';
 import { Link } from 'react-router-dom';
 import DropdownMenu from './DropdownMenu';
-import Icon from '@mdi/react';
+import Icon from '@mdi/react'; // https://pictogrammers.com/docs/library/mdi/getting-started/react/
 // import { mdiMagnify } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/magnify/
 import { mdiChevronDown } from '@mdi/js'; // https://pictogrammers.com/library/mdi/icon/chevron-down/
 import { ApiResponse, CategoryData } from '../types';

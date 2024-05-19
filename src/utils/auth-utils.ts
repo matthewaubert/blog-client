@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { jwtDecode, JwtPayload } from 'jwt-decode'; // https://github.com/auth0/node-jsonwebtoken
+import { jwtDecode, JwtPayload } from 'jwt-decode'; // https://www.npmjs.com/package/jwt-decode
 import { ApiResponse } from '../types';
 
 interface AuthContextData {
