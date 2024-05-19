@@ -122,4 +122,4 @@ To do:
 - [x] Deploy
   - [x] Back end
   - [x] Front end
-- [ ] Write a bit in README
+- [x] Write a bit in README
