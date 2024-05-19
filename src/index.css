@@ -3,24 +3,28 @@
 @tailwind utilities;
 
 :root {
-  font-family: sans-serif;
   line-height: 1.5;
   @apply text-gray-800;
 }
 
-h1 {
+h1,
+h2,
+h3 {
+  @apply font-display;
   @apply font-bold;
+}
+
+h1 {
   @apply text-3xl;
+  @apply text-[1.7rem];
 }
 
 h2 {
-  @apply font-bold;
   @apply text-2xl;
   @apply sm:text-3xl;
 }
 
 h3 {
-  @apply font-bold;
   @apply text-xl;
   @apply sm:text-2xl;
 }
@@ -44,8 +48,7 @@ nav {
   @apply h-[calc(100vh-68px)];
   background: linear-gradient(217deg, #1e40af, transparent 71%),
     linear-gradient(127deg, #60a5fa, transparent 71%),
-    linear-gradient(336deg, #dbeafe, transparent 71%),
-    #38bdf8;
+    linear-gradient(336deg, #dbeafe, transparent 71%), #38bdf8;
   /* background: linear-gradient(217deg, #075985, transparent 71%),
     linear-gradient(127deg, #0ea5e9, transparent 71%),
     linear-gradient(336deg, #7dd3fc, transparent 71%),
@@ -82,6 +85,7 @@ a {
 
 .login {
   @apply text-blue-500;
+  @apply hover:text-blue-600;
   @apply font-bold;
 }
 

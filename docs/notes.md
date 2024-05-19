@@ -104,13 +104,13 @@ To do:
 - [x] Create form to write comments
   - Only users who are logged in can make new comments
   - If not logged in, include a message explaining you need to be logged in to write comments
-- [ ] Style
+- [x] Style
   - [x] Layout
   - [x] Colors
   - [x] Make responsive
-  - [ ] Choose typeface
+  - [x] Choose typeface
 - [x] Create splash page
-- [ ] Choose name
+- [x] Choose name
 - [ ] Create `LoadingIndicator`
 - [ ] Footer?
 - [ ] Build useMediaQuery hook?

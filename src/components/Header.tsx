@@ -42,14 +42,16 @@ export default function Header() {
       className="sticky top-0 py-4 bg-white flex justify-between items-center"
     >
       <h1>
-        <Link to="/">Blog</Link>
+        <Link to="/" className="text-blue-500 hover:text-blue-600">
+          Horizons
+        </Link>
       </h1>
       <DropdownMenu
         icon={
           <Icon
             path={mdiChevronDown}
             color=""
-            className="h-9 fill-gray-500 hover:fill-blue-500"
+            className="h-9 fill-gray-500 hover:fill-blue-600"
           />
         }
         className={
@@ -66,8 +68,12 @@ export default function Header() {
           </Link>
         ) : (
           <>
-            <Link to="/signup" className="text-lg">Sign up</Link>
-            <Link to="/login" className="text-lg">Log in</Link>
+            <Link to="/signup" className="text-lg">
+              Sign up
+            </Link>
+            <Link to="/login" className="text-lg">
+              Log in
+            </Link>
           </>
         )}
         <hr className="border border-blue-300 w-full" />
