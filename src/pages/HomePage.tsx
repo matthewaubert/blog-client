@@ -15,7 +15,7 @@ export default function HomePage() {
     <>
       <Splash />
       <main className="flex flex-col gap-12 mt-10">
-        {loading && <LoadingIndicator />}
+        {loading && <LoadingIndicator color="#bfdbfe" />}
         {error && <p>{error}</p>}
         {data &&
           data.data.map(

@@ -111,7 +111,12 @@ To do:
   - [x] Choose typeface
 - [x] Create splash page
 - [x] Choose name
-- [ ] Create `LoadingIndicator`
-- [ ] Footer?
-- [ ] Build useMediaQuery hook?
-- [ ] Add `url` virtual property on Posts, Users, Categories?
+
+# 5/19/24
+
+To do:
+- [x] Develop `LoadingIndicator`
+- [ ] Style error page
+- [ ] Comment out console.logs
+- [ ] Write a bit in README
+- [ ] Deploy
