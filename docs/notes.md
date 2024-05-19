@@ -109,6 +109,7 @@ To do:
   - [x] Colors
   - [x] Make responsive
   - [ ] Choose typeface
+- [x] Create splash page
 - [ ] Choose name
 - [ ] Create `LoadingIndicator`
 - [ ] Footer?

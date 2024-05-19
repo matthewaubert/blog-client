@@ -56,25 +56,31 @@ export default function Header() {
           'absolute left-0 right-0 top-[68px] ' +
           'max-h-[calc(100vh-68px)] overflow-y-scroll ' +
           'flex flex-col items-start gap-3 ' +
-          'bg-gray-200 border-b border-gray-300 font-bold shadow-lg'
+          'bg-blue-100 border-b border-gray-300 font-bold shadow-lg'
         }
       >
         {/* <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" /> */}
         {!isPayloadExpired(authData) ? (
-          <Link to="/" onClick={logout}>Log out</Link>
+          <Link to="/" onClick={logout}>
+            Log out
+          </Link>
         ) : (
           <>
-            <Link to="/signup">Sign up</Link>
-            <Link to="/login">Log in</Link>
+            <Link to="/signup" className="text-lg">Sign up</Link>
+            <Link to="/login" className="text-lg">Log in</Link>
           </>
         )}
-        <hr className="border border-gray-300 w-full" />
+        <hr className="border border-blue-300 w-full" />
         <>
           {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
           {data &&
             data.data.map((category) => (
-              <Link to={`categories/${category.slug}`} key={category._id}>
+              <Link
+                to={`categories/${category.slug}`}
+                key={category._id}
+                className="text-lg"
+              >
                 {decode(category.name)}
               </Link>
             ))}

@@ -3,6 +3,7 @@ import PostThumbnail from '../components/PostThumbnail';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { BASE_URL } from '../config';
 import { ApiResponse, PostData } from '../types';
+import Splash from '../components/Splash';
 
 export default function HomePage() {
   const { data, error, loading } = useFetch<ApiResponse<PostData[]>>(
@@ -11,14 +12,17 @@ export default function HomePage() {
   // console.log(data || error || loading);
 
   return (
-    <main className="flex flex-col gap-12">
-      {loading && <LoadingIndicator />}
-      {error && <p>{error}</p>}
-      {data &&
-        data.data.map(
-          (post) =>
-            post.isPublished && <PostThumbnail key={post._id} data={post} />,
-        )}
-    </main>
+    <>
+      <Splash />
+      <main className="flex flex-col gap-12 mt-10">
+        {loading && <LoadingIndicator />}
+        {error && <p>{error}</p>}
+        {data &&
+          data.data.map(
+            (post) =>
+              post.isPublished && <PostThumbnail key={post._id} data={post} />,
+          )}
+      </main>
+    </>
   );
 }
