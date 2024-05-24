@@ -1,9 +1,9 @@
 import { createContext, useContext } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode'; // https://www.npmjs.com/package/jwt-decode
-import { ApiResponse } from '../types';
+import { ApiResponse, AuthData } from '../types';
 
 interface AuthContextData {
-  authData: JwtPayload | null;
+  authData: AuthData | null;
   login: (data: ApiResponse) => void;
   logout: () => void;
 }

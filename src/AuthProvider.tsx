@@ -1,14 +1,14 @@
 import { useState, useCallback, useMemo } from 'react';
 import { AuthContext, decodeToken } from './utils/auth-utils';
 import { isStorageAvailable, getJwtPayload } from './utils/local-storage';
-import { ApiResponse } from './types';
+import { ApiResponse, AuthData } from './types';
 
 interface Props {
   children: JSX.Element | JSX.Element[];
 }
 
 export default function AuthProvider({ children }: Props) {
-  const [authData, setAuthData] = useState(getJwtPayload());
+  const [authData, setAuthData] = useState(getJwtPayload() as AuthData | null);
 
   // if given data has a token and `localStorage` is available:
   // store token in `localStorage` and set `authData` in app state
@@ -16,7 +16,7 @@ export default function AuthProvider({ children }: Props) {
     if (data.token && isStorageAvailable('localStorage')) {
       // console.log('stored!', data.token);
       localStorage.setItem('token', data.token);
-      setAuthData(decodeToken(data.token));
+      setAuthData(decodeToken(data.token) as AuthData | null);
     }
   }, []);
 

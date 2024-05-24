@@ -10,7 +10,8 @@
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
   @apply font-display;
   @apply font-bold;
 }
@@ -129,4 +130,12 @@ a {
 .splash .form-btn {
   @apply bg-blue-600;
   @apply hover:bg-blue-700;
+}
+
+.grid-cols-autofill {
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+.grid-cols-autofill h4 {
+  @apply mb-1;
 }

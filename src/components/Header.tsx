@@ -61,9 +61,16 @@ export default function Header() {
       >
         {/* <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" /> */}
         {!isPayloadExpired(authData) ? (
-          <Link to="/" className="text-lg" onClick={logout}>
-            Log out
-          </Link>
+          <>
+            {!authData?.user.isVerified && (
+              <Link to="/become-author" className="text-lg">
+                Become an author
+              </Link>
+            )}
+            <Link to="/" className="text-lg" onClick={logout}>
+              Log out
+            </Link>
+          </>
         ) : (
           <>
             <Link to="/signup" className="text-lg">

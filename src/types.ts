@@ -1,3 +1,5 @@
+import { JwtPayload } from 'jwt-decode';
+
 /**
  * Response from Blog API
  * @param {any} D - expected response data type, e.g. `PostData[]`. Defaults to `unknown`.
@@ -66,4 +68,20 @@ export interface CommentData {
   };
   createdAt: string;
   updatedAt: string;
+}
+
+export interface AuthData extends JwtPayload {
+  user: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    slug: string;
+    email: string;
+    password: string;
+    isVerified: boolean;
+    isAdmin: boolean;
+  };
+  iat: number;
+  exp: number;
 }
