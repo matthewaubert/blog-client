@@ -17,7 +17,7 @@ interface Field {
 
 interface Props<U> {
   className?: string;
-  fields: Field[];
+  fields?: Field[];
   btnText?: string;
   action: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -30,21 +30,22 @@ interface Props<U> {
 /**
  * JSX component for a form meant to submit its data to an API.
  * @param {Props} props
- * @param {object[]} props.fields - Array of objects defining the fields to display
- * @param {string} props.btnText - Text to display within button. Defaults to 'Submit'.
- * @param {string} props.action - The resource to which you want to send the form data
+ * @param {object[]} [props.fields] - Optional array of objects defining the fields to display.
+ * @param {string} [props.btnText] - Optional text to display within button. Defaults to 'Submit'.
+ * @param {string} props.action - The resource to which you want to send the form data.
  * @param {string} props.method - The request method, e.g. `'GET'`, `'POST'`.
- * Defaults to `'GET'`.
- * @param {Function} [props.errorExtractor] - A function used to pull error messages from your
- * expected fetch response. It should accept the fetch response object and return a string.
- * @param {string} [props.successMsg] - Message to display on successful form submission
- * @param {string} [props.navigateTo] - URL to navigate to on successful form submission
+ * @param {Function} [props.errorExtractor] - Optional function used to pull error messages from
+ * your expected fetch response. It should accept the fetch response object and return a string.
+ * @param {Function} [props.dataHandler] - Optional function that is run upon successful submission.
+ * It should accept the response object and return nothing.
+ * @param {string} [props.successMsg] - Optional message to display on successful form submission.
+ * @param {string} [props.navigateTo] - Optional URL to navigate to on successful form submission.
  * @returns {JSX.Element}
  */
 export default function Form<T>({
   className,
-  fields,
-  btnText,
+  fields = [],
+  btnText = 'Submit',
   action,
   method,
   errorExtractor,
@@ -71,7 +72,9 @@ export default function Form<T>({
         dataHandler(data);
       }
       // clear form fields
-      setFormData(() => ({ ...getFormFields(fields) }));
+      if (Object.keys(fields).length) {
+        setFormData(() => ({ ...getFormFields(fields) }));
+      }
     }
   }, [data, navigate, navigateTo, dataHandler, fields]);
 
@@ -111,7 +114,8 @@ export default function Form<T>({
 
       // send formData to API as POST request
       fetchData(action, {
-        body: formData,
+        // send body if `formData` has any properties
+        ...(Object.keys(formData).length && { body: formData }),
         errorExtractor,
         method: method,
         headers: {
@@ -131,7 +135,8 @@ export default function Form<T>({
         action=""
         method={method}
         className={
-          'grid grid-cols-2 gap-4' + (className ? ` ${className}` : '')
+          (fields.length ? 'grid grid-cols-2 gap-4' : '') +
+          (className ? ` ${className}` : '')
         }
         onSubmit={handleSubmit}
         noValidate
@@ -176,7 +181,7 @@ export default function Form<T>({
         ))}
 
         <button type="submit" className="form-btn col-span-2">
-          {btnText ?? 'Submit'}
+          {btnText}
         </button>
       </form>
     </>
