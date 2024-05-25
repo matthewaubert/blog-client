@@ -33,3 +33,4 @@ This project is being built in order to practice implementing the following skil
 - [jwt-decode](https://www.npmjs.com/package/jwt-decode) – for decoding JSON web tokens
 - [LDRS](https://uiball.com/ldrs/) – for loading indicators
 - [Material Design Icons](https://pictogrammers.com/docs/library/mdi/getting-started/react/) – for SVG icon components
+- [React Router](https://reactrouter.com/en/main) - for handling client-side routing
