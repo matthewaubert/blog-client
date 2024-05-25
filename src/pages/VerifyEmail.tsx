@@ -23,6 +23,7 @@ export default function VerifyEmail() {
 
   // send token as query param to `verification` endpoint
   const { data, error, loading } = useFetch<ApiResponse>(
+    // only make request if token provided
     token ? `${BASE_URL}api/verification` : undefined,
     fetchOptions,
   );
@@ -37,12 +38,15 @@ export default function VerifyEmail() {
 
   return (
     <main className="flex flex-col gap-4">
-      {loading && <LoadingIndicator />}
-      {error && (
+      {token && loading && <LoadingIndicator />}
+      {(!token || error) && (
         <>
           <h2>Error</h2>
-          <p>There was an error verifying your email. Please try again.</p>
-          <p>{error}</p>
+          <p>
+            {'There was an error verifying your email' +
+              (error ? `: "${error}"` : '') +
+              '. Please try again.'}
+          </p>
         </>
       )}
       {data && (
@@ -50,7 +54,7 @@ export default function VerifyEmail() {
           <h2>Email Verified</h2>
           <p>
             Your email has been verified! When the content management system is
-            ready, you&apos;ll be able to write and manage your own blog posts.
+            ready, you&apos;ll be able to create and manage your own blog posts.
           </p>
         </>
       )}

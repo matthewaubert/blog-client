@@ -31,18 +31,18 @@ To do:
 To do:
 - [x] Fetch Posts from API for homepage
 
-# 5/5/24
+## 5/5/24
 To do:
 - [x] Build PostThumbnail component
 
-# 5/6/24
+## 5/6/24
 
 To do:
 - [x] Build Header component
   - [x] Set shadow to appear/disappear on scroll
   - [x] Build DropdownMenu
 
-# 5/7/24
+## 5/7/24
 
 To do:
 - [x] Fetch Categories list from API for nav menu
@@ -51,12 +51,12 @@ To do:
   - [x] Create routes for signup, login, logout, Users, Posts, and Categories links
 - [x] Close DropdownMenu when user clicks a link or outside of menu
 
-# 5/8/24
+## 5/8/24
 
 To do:
 - [x] Modify API endpoints to support querying resources by slug
 
-# 5/9/24
+## 5/9/24
 
 To do:
 - [x] Create page for individual Posts
@@ -64,7 +64,7 @@ To do:
 - [x] Create page for individual Categories
 - [x] Create signup page
 
-# 5/10/24
+## 5/10/24
 
 To do:
 - [ ] Signup Page
@@ -72,33 +72,33 @@ To do:
    - [x] Navigate to login page after signup
    - [x] Show success message after signup, before navigation
 
-# 5/11/24
+## 5/11/24
 
 To do:
 - [x] Signup Page
   - [x] Enable immediate form validation
   - [x] Show form submission errors
 
-# 5/13/24
+## 5/13/24
 
 To do:
 - [x] Refactor Form to separate component?
 - [x] Login Page
 
-# 5/14/23
+## 5/14/23
 
 To do:
 - [x] Create Auth context and enable logout
 - [x] Decode token and store in app AuthProvider context
 - [x] Memoize AuthProvider
 
-# 5/16/24
+## 5/16/24
 
 To do:
 - [x] Display comments on PostPage
   - Anyone can see comments
 
-# 5/18/24
+## 5/18/24
 
 To do:
 - [x] Create form to write comments
@@ -112,7 +112,7 @@ To do:
 - [x] Create splash page
 - [x] Choose name
 
-# 5/19/24
+## 5/19/24
 
 To do:
 - [x] Develop `LoadingIndicator`
@@ -123,3 +123,14 @@ To do:
   - [x] Back end
   - [x] Front end
 - [x] Write a bit in README
+
+## 5/24/24
+
+To do:
+- [x] Refactor Form to optionally take fields
+- [x] Create BecomeAuthor page to trigger verification email
+
+## 5/25/24
+
+To do:
+- [x] Create VerifyEmail page to send verification JWT
