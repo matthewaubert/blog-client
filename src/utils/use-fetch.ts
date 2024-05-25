@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 type Opts<U> = {
   body?: object;
@@ -48,6 +48,8 @@ export default function useFetch<T>(
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const stableOptions = useRef(options);
+
   const fetchData = useCallback(async (resource: string, options?: Opts<T>) => {
     const bodyJson = options?.body ? JSON.stringify(options.body) : null;
 
@@ -80,14 +82,14 @@ export default function useFetch<T>(
     }
   }, []);
 
-  // only run this if params are provided to `useFetch`
+  // only run this if `resource` is provided to `useFetch`
   useEffect(() => {
     if (resource) {
-      fetchData(resource, options).catch((err) => {
+      fetchData(resource, stableOptions.current).catch((err) => {
         console.error(err);
       });
     }
-  }, [fetchData, resource, options]);
+  }, [fetchData, resource]);
 
   return { data, error, loading, fetchData };
 }
