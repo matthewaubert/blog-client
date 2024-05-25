@@ -1,4 +1,4 @@
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useFetch from '../utils/use-fetch';
 import { ApiResponse } from '../types';
@@ -7,23 +7,33 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import extractErrorMsg from '../utils/extract-error-msg';
 import { useAuth } from '../utils/auth-utils';
 
-const fetchOptions = {
-  errorExtractor: extractErrorMsg,
-  method: 'PATCH',
-} as const;
-
 export default function VerifyEmail() {
   const { login } = useAuth();
   const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+
+  const fetchOptions = {
+    errorExtractor: extractErrorMsg,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    method: 'PATCH',
+  } as const;
+
   // send token as query param to `verification` endpoint
   const { data, error, loading } = useFetch<ApiResponse>(
-    `${BASE_URL}api/verification?token=${searchParams.get('token')}`,
+    token ? `${BASE_URL}api/verification` : undefined,
     fetchOptions,
   );
-  if (data) {
-    login(data);
-    console.log('data:', data);
-  }
+
+  // log user in again with new token
+  useEffect(() => {
+    if (data) {
+      login(data);
+      console.log('data:', data);
+    }
+  }, [login, data]);
 
   return (
     <main className="flex flex-col gap-4">
