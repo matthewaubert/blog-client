@@ -4,6 +4,7 @@ import ErrorPage from './pages/ErrorPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
 import BecomeAuthor from './pages/BecomeAuthor';
+import VerifyEmail from './pages/VerifyEmail';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import CategoryPage from './pages/CategoryPage';
@@ -29,6 +30,10 @@ const routerConfig = [
       {
         path: 'become-author',
         element: <BecomeAuthor />,
+      },
+      {
+        path: 'verify-email',
+        element: <VerifyEmail />,
       },
       {
         path: 'users/:userSlug',
