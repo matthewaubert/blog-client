@@ -188,9 +188,32 @@ export default function Form<T>({
   );
 }
 
+/**
+ * Return an object containing a key of `field.name` with the value of an empty string
+ * for each object in the given array of `Field` objects
+ * @param fields - e.g. `{ { name: 'email', ... }, { name: 'password', ... } }`
+ * @returns e.g. `{ email: '', password: '' }`
+ */
+function getFormFields(fields: Field[]) {
+  return fields.reduce(
+    (accumulator, field) => {
+      accumulator[field.name] = '';
+      return accumulator;
+    },
+    {} as Record<string, string>,
+  );
+}
+
+/**
+ * Check validity of given field. Returns an object containing a `fieldIsValid`
+ * boolean property and a `message` string property.
+ * @param field - an HTMLInputElement or HTMLTextAreaElement
+ * @param passwordField - optional HTMLInputElement password field
+ * @returns e.g. `{ fieldIsValid: false, message: 'Please fill out this field.' }`
+ */
 function validateField(
   field: HTMLInputElement | HTMLTextAreaElement,
-  passwordField?: HTMLInputElement | null,
+  passwordField?: HTMLInputElement | null | undefined,
 ) {
   let fieldIsValid = field.validity.valid;
   let message = field.validationMessage;
@@ -208,6 +231,18 @@ function validateField(
   return { fieldIsValid, message };
 }
 
+/**
+ * Check validity of each field in given form. Returns an object containing a `formIsValid`
+ * boolean property and a `messages` object containing a string property for each field.
+ * @param form - an HTMLFormElement
+ * @returns e.g. `{
+ *   formIsValid: false,
+ *   messages: {
+ *     email: 'Please fill out this field.',
+ *     password: 'Please fill out this field.'
+ *   }
+ * }`
+ */
 function validateForm(form: HTMLFormElement) {
   const fields: (HTMLInputElement | HTMLTextAreaElement)[] = Array.from(
     form.querySelectorAll('input, textarea'),
@@ -234,14 +269,4 @@ function validateForm(form: HTMLFormElement) {
   });
 
   return { formIsValid, messages };
-}
-
-function getFormFields(fields: Field[]) {
-  return fields.reduce(
-    (accumulator, field) => {
-      accumulator[field.name] = '';
-      return accumulator;
-    },
-    {} as Record<string, string>,
-  );
 }
