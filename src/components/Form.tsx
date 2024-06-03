@@ -3,12 +3,14 @@ import useFetch from '../utils/use-fetch';
 import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 import SubmissionMsg from '../components/SubmissionMsg';
+import CmsEditor from './CmsEditor';
+import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
 
 interface Field {
   name: string;
   label?: string;
-  type: string;
+  type: string; // e.g. 'text', 'textarea', 'editor'
   placeholder?: string;
   rows?: number;
   required?: boolean;
@@ -57,6 +59,7 @@ export default function Form<T>({
   const [formData, setFormData] = useState({ ...formFields });
   const [formErrors, setFormErrors] = useState({ ...formFields });
   const passwordRef = useRef<null | HTMLInputElement>(null);
+  const editorRef = useRef<TinyMceEditor | null>(null);
   const { data, error, fetchData } = useFetch<T>();
   const navigate = useNavigate();
   // if (data) console.log('data:', data);
@@ -66,7 +69,7 @@ export default function Form<T>({
     if (data) {
       // 3 seconds after successful form submission, navigate to given page
       if (navigateTo) {
-        setTimeout(() => navigate(navigateTo), 2500);
+        setTimeout(() => navigate(navigateTo), 2000);
       }
       if (dataHandler) {
         dataHandler(data);
@@ -103,7 +106,7 @@ export default function Form<T>({
     });
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const { formIsValid, messages } = validateForm(e.target as HTMLFormElement);
@@ -112,10 +115,16 @@ export default function Form<T>({
     if (formIsValid) {
       const token = getToken(); // get JWT from `localStorage`
 
+      // get editor data and save to editorField['fieldName']
+      const editorData = await getEditorContent(editorRef, fields);
+      console.log('editorData:', editorData);
+
       // send formData to API as POST request
       fetchData(action, {
-        // send body if `formData` has any properties
-        ...(Object.keys(formData).length && { body: formData }),
+        // send body if `formData` has any properties or `editorData` exists
+        ...((Object.keys(formData).length || editorData) && {
+          body: { ...formData, ...editorData },
+        }),
         errorExtractor,
         method: method,
         headers: {
@@ -123,7 +132,7 @@ export default function Form<T>({
           // send "Authorization" header if JWT in `localStorage`
           ...(token && { Authorization: `Bearer ${token}` }),
         },
-      }).catch((err) => console.dir(err));
+      }).catch(console.error);
     }
   }
 
@@ -138,7 +147,9 @@ export default function Form<T>({
           (fields.length ? 'grid grid-cols-2 gap-4' : '') +
           (className ? ` ${className}` : '')
         }
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          handleSubmit(e).catch(console.error);
+        }}
         noValidate
       >
         {fields.map((field, i) => (
@@ -147,7 +158,25 @@ export default function Form<T>({
             className={'input-container' + (field.colSpan ? ' col-span-2' : '')}
           >
             {field.label && <label htmlFor={field.name}>{field.label}</label>}
-            {field.type !== 'textarea' ? (
+            {field.type === 'editor' ? (
+              <CmsEditor
+                name={field.name}
+                placeholder="Write your post here..."
+                ref={editorRef}
+              />
+            ) : field.type === 'textarea' ? (
+              <textarea
+                className={'input' + (formErrors[field.name] && ' error')}
+                id={field.name}
+                name={field.name}
+                placeholder={field.placeholder}
+                rows={field.rows}
+                required={field.required ?? false}
+                value={formData[field.name] ?? ''}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+              />
+            ) : (
               <input
                 ref={field.name === 'password' ? passwordRef : undefined}
                 type={field.type}
@@ -160,18 +189,6 @@ export default function Form<T>({
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 autoFocus={i === 0}
-              />
-            ) : (
-              <textarea
-                className={'input' + (formErrors[field.name] && ' error')}
-                id={field.name}
-                name={field.name}
-                placeholder={field.placeholder}
-                rows={field.rows}
-                required={field.required ?? false}
-                value={formData[field.name] ?? ''}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
               />
             )}
             {formErrors[field.name] && (
@@ -269,4 +286,38 @@ function validateForm(form: HTMLFormElement) {
   });
 
   return { formIsValid, messages };
+}
+
+/**
+ * Get TinyMCE editor content, if any.
+ * @param ref - React ref
+ * @param fields array of `Field` objects
+ * @returns
+ */
+async function getEditorContent(
+  ref: React.MutableRefObject<TinyMceEditor | null>,
+  fields: Field[],
+) {
+  const editorFieldName = getEditorFieldName(fields);
+
+  if (ref.current && editorFieldName) {
+    try {
+      await ref.current.uploadImages();
+      return { [editorFieldName]: ref.current.getContent() };
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Find name of editor field, if any.
+ * @param fields - array of `Field` objects
+ * @returns
+ */
+function getEditorFieldName(fields: Field[]) {
+  const editorField = fields.find((field) => field.type === 'editor');
+  return editorField?.name ?? null;
 }
