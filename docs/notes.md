@@ -134,3 +134,22 @@ To do:
 
 To do:
 - [x] Create VerifyEmail page to send verification JWT
+
+## 5/28/24
+
+To do:
+- [x] Research rich-text editors and choose one
+  - **TinyMCE**
+  - ~~TipTap~~
+  - ~~CSEditor~~
+  - ~~Quill~~
+  - ~~Slate~~
+  - ~~react-markdown~~
+  - [Rich Text Editor](https://richtexteditor.com/)
+- [x] Create account and go through setup
+
+## 6/1/24
+
+To do:
+- [ ] Configure editor
+- [ ] Serve up API key from back end
