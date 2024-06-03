@@ -8,6 +8,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import CategoryPage from './pages/CategoryPage';
+import CreatePost from './pages/CreatePost';
 
 const routerConfig = [
   {
@@ -46,6 +47,10 @@ const routerConfig = [
       {
         path: 'categories/:categorySlug',
         element: <CategoryPage />,
+      },
+      {
+        path: 'author/create-post',
+        element: <CreatePost />,
       },
     ],
   },

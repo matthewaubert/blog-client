@@ -148,8 +148,13 @@ To do:
   - [Rich Text Editor](https://richtexteditor.com/)
 - [x] Create account and go through setup
 
-## 6/1/24
+## 6/3/24
 
 To do:
-- [ ] Configure editor
+- [x] Configure editor
+
+## 6/8/24
+
+To do:
+- [ ] Send TinyMCE images to correct API endpoint
 - [ ] Serve up API key from back end

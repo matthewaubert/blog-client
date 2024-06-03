@@ -37,7 +37,7 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 py-4 bg-white flex justify-between items-center"
+      className="sticky top-0 z-10 py-4 bg-white flex justify-between items-center"
     >
       <h1>
         <Link to="/" className="text-blue-500 hover:text-blue-600">
