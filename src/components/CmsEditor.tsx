@@ -82,43 +82,8 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
               'removeformat | help',
             file_picker_types: 'image', // e.g. 'file image media'
             image_title: true, // enable title field in the Image dialog
-            // specify a function that is used to replace TinyMCE’s default upload handler
-            // https://www.tiny.cloud/docs/tinymce/latest/upload-images/#images_upload_handler
-            images_upload_handler: async (blobInfo) => {
-              const formData = new FormData();
-              formData.append('image', blobInfo.blob(), blobInfo.filename());
-
-              try {
-                const response = await fetch(`${BASE_URL}api/images`, {
-                  method: 'POST',
-                  mode: 'cors',
-                  body: formData,
-                });
-
-                if (!response.ok) {
-                  // if the response status is not OK, throw an error with details
-                  throw new Error(`HTTP Error: ${response.status}`);
-                }
-
-                const data = (await response.json()) as Record<string, string>;
-
-                if (data.location) {
-                  return data.location; // resolve with the image URL
-                } else {
-                  // if the response does not contain the expected data
-                  throw new Error('Invalid server response');
-                }
-              } catch (err) {
-                console.error(err);
-                // Reject with a structured error object as expected by TinyMCE
-                return Promise.reject({
-                  message: getErrorMessage(err) || 'Image upload failed',
-                  remove: true,
-                });
-              }
-            },
-            // use actual filename of image, instead of generating new one each time
-            images_reuse_filename: true,
+            images_upload_handler: imagesUploadHandler,
+            images_reuse_filename: true, // use actual filename of image, instead of generating new one each time
             content_style:
               'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           }}
@@ -127,5 +92,56 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
     </>
   );
 });
+
+interface BlobInfo {
+  id: () => string;
+  name: () => string;
+  filename: () => string;
+  blob: () => Blob;
+  base64: () => string;
+  blobUri: () => string;
+  uri: () => string | undefined;
+}
+
+/**
+ * Function that is used to replace TinyMCE’s default upload handler.
+ * Sends image to back end to be handled and, if successful, gets back its URL.
+ * https://www.tiny.cloud/docs/tinymce/latest/upload-images/#images_upload_handler
+ * @param {BlobInfo} blobInfo - Uploaded image blob info
+ * @returns Promise that resolves to image URL or rejects as structured error object
+ */
+async function imagesUploadHandler(blobInfo: BlobInfo) {
+  const formData = new FormData();
+  formData.append('image', blobInfo.blob(), blobInfo.filename());
+
+  try {
+    const response = await fetch(`${BASE_URL}api/images`, {
+      method: 'POST',
+      mode: 'cors',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      // if the response status is not OK, throw an error with details
+      throw new Error(`HTTP Error: ${response.status}`);
+    }
+
+    const data = (await response.json()) as Record<string, string>;
+
+    if (data.location) {
+      return data.location; // resolve with the image URL
+    } else {
+      // if the response does not contain the expected data
+      throw new Error('Invalid server response');
+    }
+  } catch (err) {
+    console.error(err);
+    // Reject with a structured error object as expected by TinyMCE
+    return Promise.reject({
+      message: getErrorMessage(err) || 'Image upload failed',
+      remove: true,
+    });
+  }
+}
 
 export default CmsEditor;
