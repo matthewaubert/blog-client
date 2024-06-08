@@ -99,7 +99,7 @@ export default function useFetch<T>(
  * @param {unknown} error
  * @returns {string} - `error.message` if instance of `Error` | stringify `error`
  */
-function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown): string {
   // return error instanceof Error ? error.message : String(error);
   return toErrorWithMessage(error).message;
 }

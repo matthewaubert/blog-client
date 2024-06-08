@@ -156,5 +156,5 @@ To do:
 ## 6/8/24
 
 To do:
-- [ ] Send TinyMCE images to correct API endpoint
+- [x] Send TinyMCE images to correct API endpoint
 - [ ] Serve up API key from back end

@@ -1,6 +1,8 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react'; // https://www.tiny.cloud/docs/tinymce/latest/react-ref/
 import { Editor as TinyMceEditor } from 'tinymce';
+import { getErrorMessage } from '../utils/use-fetch';
+import { BASE_URL } from '../config';
 
 interface Props {
   name: string;
@@ -15,20 +17,6 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
     getContent: () => editorRef.current?.getContent(),
     uploadImages: () => editorRef.current?.uploadImages(),
   }));
-
-  // const handleSubmit = async () => {
-  //   if (editorRef.current) {
-  //     try {
-  //       await editorRef.current.uploadImages();
-
-  //       const content = editorRef.current.getContent();
-  //       console.log(content);
-  //       // POST content to API
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }
-  // };
 
   return (
     <>
@@ -50,8 +38,6 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
             'fullscreen',
             'help',
             'image',
-            'insertdatetime',
-            'insertfile',
             'link',
             'lists',
             'advlist', // list styles
@@ -66,21 +52,49 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
             'undo redo | blocks | bold italic underline strikethrough | forecolor | ' +
             'align | linkbullist numlist outdent indent table | link image | ' +
             'removeformat | help',
+          file_picker_types: 'image', // e.g. 'file image media'
+          image_title: true, // enable title field in the Image dialog
+          // specify a function that is used to replace TinyMCE’s default upload handler
+          // https://www.tiny.cloud/docs/tinymce/latest/upload-images/#images_upload_handler
+          images_upload_handler: async (blobInfo) => {
+            const formData = new FormData();
+            formData.append('image', blobInfo.blob(), blobInfo.filename());
+
+            try {
+              const response = await fetch(`${BASE_URL}api/images`, {
+                method: 'POST',
+                mode: 'cors',
+                body: formData,
+              });
+
+              if (!response.ok) {
+                // if the response status is not OK, throw an error with details
+                throw new Error(`HTTP Error: ${response.status}`);
+              }
+
+              const data = (await response.json()) as Record<string, string>;
+
+              if (data.location) {
+                return data.location; // resolve with the image URL
+              } else {
+                // if the response does not contain the expected data
+                throw new Error('Invalid server response');
+              }
+            } catch (err) {
+              console.error(err);
+              // Reject with a structured error object as expected by TinyMCE
+              return Promise.reject({
+                message: getErrorMessage(err) || 'Image upload failed',
+                remove: true,
+              });
+            }
+          },
+          // use actual filename of image, instead of generating new one each time
+          images_reuse_filename: true,
           content_style:
             'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-          style_formats: [
-            { title: 'Heading 1', block: 'h3' },
-            { title: 'Heading 2', block: 'h4' },
-            { title: 'Heading 3', block: 'h5' },
-            { title: 'Block quote', block: 'blockquote' },
-            { title: 'Preformatted', block: 'pre' },
-            { title: 'Code block', block: 'code' },
-          ],
         }}
       />
-      {/* <button className="form-btn" onClick={void handleSubmit}>
-        Log editor content
-      </button> */}
     </>
   );
 });
