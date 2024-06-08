@@ -157,4 +157,4 @@ To do:
 
 To do:
 - [x] Send TinyMCE images to correct API endpoint
-- [ ] Serve up API key from back end
+- [x] Fetch TinyMCE API key from back end
