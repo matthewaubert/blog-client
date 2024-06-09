@@ -7,14 +7,24 @@ import CmsEditor from './CmsEditor';
 import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
 
+type HTMLFormFieldElement =
+  | HTMLInputElement
+  | HTMLTextAreaElement
+  | HTMLSelectElement;
+
 interface Field {
   name: string;
   label?: string;
-  type: string; // e.g. 'text', 'textarea', 'editor'
+  type: string; // e.g. 'text', 'textarea', 'select', 'editor'
   placeholder?: string;
   rows?: number;
   required?: boolean;
   colSpan?: boolean;
+  selectOptions?: {
+    value: string;
+    name: string;
+    selected?: boolean;
+  }[];
 }
 
 interface Props<U> {
@@ -82,17 +92,13 @@ export default function Form<T>({
   }, [data, navigate, navigateTo, dataHandler, fields]);
 
   // update formData and clear form error
-  function handleInputChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
+  function handleInputChange(e: React.ChangeEvent<HTMLFormFieldElement>) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setFormErrors({ ...formErrors, [e.target.name]: '' });
   }
 
   // if field is invalid when it loses focus: set form error
-  function handleInputBlur(
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
+  function handleInputBlur(e: React.FocusEvent<HTMLFormFieldElement>) {
     const { fieldIsValid, message } = validateField(
       e.target,
       passwordRef.current,
@@ -136,6 +142,8 @@ export default function Form<T>({
     }
   }
 
+  console.log('formData:', formData);
+
   return (
     <>
       {data && successMsg && <SubmissionMsg success={true} msg={successMsg} />}
@@ -164,6 +172,22 @@ export default function Form<T>({
                 placeholder="Write your post here..."
                 ref={editorRef}
               />
+            ) : field.type === 'select' ? (
+              <select
+                className={'input' + (formErrors[field.name] && ' error')}
+                name={field.name}
+                required={field.required ?? false}
+                value={formData[field.name] ?? ''}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+              >
+                {field.selectOptions &&
+                  field.selectOptions.map((option) => (
+                    <option key={option.name} value={option.value}>
+                      {option.name}
+                    </option>
+                  ))}
+              </select>
             ) : field.type === 'textarea' ? (
               <textarea
                 className={'input' + (formErrors[field.name] && ' error')}
@@ -224,12 +248,12 @@ function getFormFields(fields: Field[]) {
 /**
  * Check validity of given field. Returns an object containing a `fieldIsValid`
  * boolean property and a `message` string property.
- * @param field - an HTMLInputElement or HTMLTextAreaElement
+ * @param field - HTMLInputElement || HTMLTextAreaElement || HTMLSelectElement
  * @param passwordField - optional HTMLInputElement password field
  * @returns e.g. `{ fieldIsValid: false, message: 'Please fill out this field.' }`
  */
 function validateField(
-  field: HTMLInputElement | HTMLTextAreaElement,
+  field: HTMLFormFieldElement,
   passwordField?: HTMLInputElement | null | undefined,
 ) {
   let fieldIsValid = field.validity.valid;
@@ -261,7 +285,7 @@ function validateField(
  * }`
  */
 function validateForm(form: HTMLFormElement) {
-  const fields: (HTMLInputElement | HTMLTextAreaElement)[] = Array.from(
+  const fields: HTMLFormFieldElement[] = Array.from(
     form.querySelectorAll('input, textarea'),
   );
   const passwordField = form.querySelector<HTMLInputElement>(
