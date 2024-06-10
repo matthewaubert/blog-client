@@ -3,6 +3,7 @@ import useFetch from '../utils/use-fetch';
 import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 import SubmissionMsg from '../components/SubmissionMsg';
+import ArrayInput from './ArrayInput';
 import CmsEditor from './CmsEditor';
 import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
@@ -15,7 +16,7 @@ type HTMLFormFieldElement =
 interface Field {
   name: string;
   label?: string;
-  type: string; // e.g. 'text', 'textarea', 'select', 'editor'
+  type: string; // e.g. 'text', 'textarea', 'select', 'array', 'editor'
   placeholder?: string;
   rows?: number;
   required?: boolean;
@@ -65,9 +66,9 @@ export default function Form<T>({
   successMsg,
   navigateTo,
 }: Props<T>) {
-  const formFields = getFormFields(fields);
-  const [formData, setFormData] = useState({ ...formFields });
-  const [formErrors, setFormErrors] = useState({ ...formFields });
+  const { initFormData, initFormErrors } = initFormFields(fields);
+  const [formData, setFormData] = useState({ ...initFormData });
+  const [formErrors, setFormErrors] = useState({ ...initFormErrors });
   const passwordRef = useRef<null | HTMLInputElement>(null);
   const editorRef = useRef<TinyMceEditor | null>(null);
   const { data, error, fetchData } = useFetch<T>();
@@ -77,7 +78,7 @@ export default function Form<T>({
   useEffect(() => {
     // if successful submission
     if (data) {
-      // 3 seconds after successful form submission, navigate to given page
+      // 2 seconds after successful form submission, navigate to given page
       if (navigateTo) {
         setTimeout(() => navigate(navigateTo), 2000);
       }
@@ -86,7 +87,7 @@ export default function Form<T>({
       }
       // clear form fields
       if (Object.keys(fields).length) {
-        setFormData(() => ({ ...getFormFields(fields) }));
+        setFormData(() => ({ ...initFormFields(fields).initFormData }));
       }
     }
   }, [data, navigate, navigateTo, dataHandler, fields]);
@@ -95,6 +96,11 @@ export default function Form<T>({
   function handleInputChange(e: React.ChangeEvent<HTMLFormFieldElement>) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setFormErrors({ ...formErrors, [e.target.name]: '' });
+  }
+
+  function handleArrayInputChange(name: string, value: string[]) {
+    setFormData({ ...formData, [name]: value });
+    setFormErrors({ ...formErrors, [name]: '' });
   }
 
   // if field is invalid when it loses focus: set form error
@@ -172,9 +178,21 @@ export default function Form<T>({
                 placeholder="Write your post here..."
                 ref={editorRef}
               />
+            ) : field.type === 'array' ? (
+              <ArrayInput
+                className={'input' + (formErrors[field.name] && ' error')}
+                id={field.name}
+                name={field.name}
+                placeholder={field.placeholder}
+                required={field.required ?? false}
+                value={formData[field.name] as string[]}
+                onChange={handleArrayInputChange}
+                onBlur={handleInputBlur}
+              />
             ) : field.type === 'select' ? (
               <select
                 className={'input' + (formErrors[field.name] && ' error')}
+                id={field.name}
                 name={field.name}
                 required={field.required ?? false}
                 value={formData[field.name] ?? ''}
@@ -230,19 +248,27 @@ export default function Form<T>({
 }
 
 /**
- * Return an object containing a key of `field.name` with the value of an empty string
- * for each object in the given array of `Field` objects
- * @param fields - e.g. `{ { name: 'email', ... }, { name: 'password', ... } }`
- * @returns e.g. `{ email: '', password: '' }`
+ * Return an object containing `initFormData` and `initFormErrors` objects.
+ * Both contain a property for each object in the given array of `fields`,
+ * with a key of the `field.name`.
+ * - `initFormData` property values are empty strings and/or empty arrays of strings.
+ * - `initFormErrors` property values are always empty strings.
+ * @param fields - e.g. `{ { name: 'title', ... }, { name: 'tags', ... } }`
+ * @returns e.g. `{
+ *   initFormData: { title: '', tags: [] },
+ *   initFormErrors: { title: '', tags: '' }
+ * }`
  */
-function getFormFields(fields: Field[]) {
-  return fields.reduce(
-    (accumulator, field) => {
-      accumulator[field.name] = '';
-      return accumulator;
-    },
-    {} as Record<string, string>,
-  );
+function initFormFields(fields: Field[]) {
+  const initFormData = {} as Record<string, string | string[]>;
+  const initFormErrors = {} as Record<string, string>;
+
+  fields.forEach((field) => {
+    initFormData[field.name] = field.type === 'array' ? [] : '';
+    initFormErrors[field.name] = '';
+  });
+
+  return { initFormData, initFormErrors };
 }
 
 /**
