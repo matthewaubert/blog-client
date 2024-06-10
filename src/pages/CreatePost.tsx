@@ -68,6 +68,13 @@ function getFields(categoriesData: CategoryData[]) {
       ],
     },
     {
+      name: 'tags',
+      label: 'Tags',
+      type: 'array',
+      placeholder: 'Add a tag and press Enter',
+      colSpan: true,
+    },
+    {
       name: 'content',
       label: 'Content',
       type: 'editor',
@@ -75,7 +82,6 @@ function getFields(categoriesData: CategoryData[]) {
       required: true,
       colSpan: true,
     },
-    // tags
     // displayImg
     // publish checkbox
   ];

@@ -158,8 +158,12 @@ To do:
 To do:
 - [x] Send TinyMCE images to correct API endpoint
 - [x] Fetch TinyMCE API key from back end
+
+## 6/10/24
+
+To do:
 - [ ] Finish building out CreatePost form
   - [x] category
-  - [ ] tags
+  - [x] tags
   - [ ] display image
   - [ ] publish
