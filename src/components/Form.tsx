@@ -17,7 +17,7 @@ type HTMLFormFieldElement =
 interface Field {
   name: string;
   label?: string;
-  type: string; // e.g. 'text', 'textarea', 'select', 'array', 'editor'
+  type: string; // e.g. 'text', 'textarea', 'select', 'file', 'array', 'editor'
   placeholder?: string;
   rows?: number;
   required?: boolean;
@@ -119,6 +119,19 @@ export default function Form<T>({
     });
   }
 
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      try {
+        const imageUrl = await uploadImage(files[0], files[0].name);
+        setFormData({ ...formData, [name]: imageUrl });
+        setFormErrors({ ...formErrors, [name]: '' });
+      } catch (err) {
+        setFormErrors({ ...formErrors, [name]: 'Image upload failed.' });
+      }
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -127,17 +140,14 @@ export default function Form<T>({
 
     if (formIsValid) {
       const token = getToken(); // get JWT from `localStorage`
-
       // get editor data and save to editorField['fieldName']
       const editorData = await getEditorContent(editorRef, fields);
-      console.log('editorData:', editorData);
+      const combinedData = { ...formData, ...editorData };
 
       // send formData to API as POST request
       fetchData(action, {
         // send body if `formData` has any properties or `editorData` exists
-        ...((Object.keys(formData).length || editorData) && {
-          body: { ...formData, ...editorData },
-        }),
+        ...(Object.keys(combinedData).length && { body: combinedData }),
         errorExtractor,
         method: method,
         headers: {
@@ -190,6 +200,17 @@ export default function Form<T>({
                 value={formData[field.name] as string[]}
                 onChange={handleArrayInputChange}
                 onBlur={handleInputBlur}
+              />
+            ) : field.type === 'file' ? (
+              <input
+                type="file"
+                className={formErrors[field.name] && ' error'}
+                id={field.name}
+                name={field.name}
+                required={field.required ?? false}
+                onChange={(e) => {
+                  handleFileChange(e).catch(console.error);
+                }}
               />
             ) : field.type === 'select' ? (
               <select
