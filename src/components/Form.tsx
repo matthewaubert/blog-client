@@ -7,6 +7,7 @@ import ArrayInput from './ArrayInput';
 import CmsEditor from './CmsEditor';
 import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
+import uploadImage from '../utils/upload-image';
 
 type HTMLFormFieldElement =
   | HTMLInputElement
@@ -176,6 +177,7 @@ export default function Form<T>({
               <CmsEditor
                 name={field.name}
                 placeholder="Write your post here..."
+                uploadImage={uploadImage}
                 ref={editorRef}
               />
             ) : field.type === 'array' ? (
