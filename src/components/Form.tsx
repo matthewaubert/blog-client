@@ -17,7 +17,7 @@ type HTMLFormFieldElement =
 interface Field {
   name: string;
   label?: string;
-  type: string; // e.g. 'text', 'textarea', 'select', 'file', 'array', 'editor'
+  type: string; // e.g. 'text', 'textarea', 'select', 'toggle', 'file', 'array', 'editor'
   placeholder?: string;
   rows?: number;
   required?: boolean;
@@ -95,8 +95,15 @@ export default function Form<T>({
 
   // update formData and clear form error
   function handleInputChange(e: React.ChangeEvent<HTMLFormFieldElement>) {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setFormErrors({ ...formErrors, [e.target.name]: '' });
+    const { name, value, type } = e.target;
+
+    // set field value (or set to boolean `checked` value if it's a checkbox)
+    setFormData({
+      ...formData,
+      [name]:
+        type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+    });
+    setFormErrors({ ...formErrors, [name]: '' }); // reset error for current field
   }
 
   function handleArrayInputChange(name: string, value: string[]) {
@@ -182,7 +189,9 @@ export default function Form<T>({
             key={field.name}
             className={'input-container' + (field.colSpan ? ' col-span-2' : '')}
           >
-            {field.label && <label htmlFor={field.name}>{field.label}</label>}
+            {field.label && field.type !== 'toggle' && (
+              <label htmlFor={field.name}>{field.label}</label>
+            )}
             {field.type === 'editor' ? (
               <CmsEditor
                 name={field.name}
@@ -212,13 +221,38 @@ export default function Form<T>({
                   handleFileChange(e).catch(console.error);
                 }}
               />
+            ) : field.type === 'toggle' ? (
+              <label className="toggle input-container">
+                <span>{field.label}</span>
+                <input
+                  type="checkbox"
+                  className={
+                    'self-start' + (formErrors[field.name] && ' error')
+                  }
+                  id={field.name}
+                  name={field.name}
+                  required={field.required ?? false}
+                  checked={formData[field.name] as boolean}
+                  onChange={handleInputChange}
+                  onBlur={handleInputBlur}
+                />
+                <div
+                  className="slider"
+                  style={{
+                    backgroundColor: formData[field.name] ? '#3b82f6' : '#9ca3af',
+                  }}
+                >
+                  {/* <span className="no">&#10005;</span>
+                  <span className="yes">&#10003;</span> */}
+                </div>
+              </label>
             ) : field.type === 'select' ? (
               <select
                 className={'input' + (formErrors[field.name] && ' error')}
                 id={field.name}
                 name={field.name}
                 required={field.required ?? false}
-                value={formData[field.name] ?? ''}
+                value={formData[field.name] as string}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
               >
@@ -237,7 +271,7 @@ export default function Form<T>({
                 placeholder={field.placeholder}
                 rows={field.rows}
                 required={field.required ?? false}
-                value={formData[field.name] ?? ''}
+                value={formData[field.name] as string}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
               />
@@ -250,7 +284,7 @@ export default function Form<T>({
                 name={field.name}
                 placeholder={field.placeholder}
                 required={field.required ?? false}
-                value={formData[field.name] ?? ''}
+                value={formData[field.name] as string}
                 onChange={handleInputChange}
                 onBlur={handleInputBlur}
                 autoFocus={i === 0}
@@ -283,11 +317,21 @@ export default function Form<T>({
  * }`
  */
 function initFormFields(fields: Field[]) {
-  const initFormData = {} as Record<string, string | string[]>;
+  const initFormData = {} as Record<string, string | string[] | boolean>;
   const initFormErrors = {} as Record<string, string>;
 
   fields.forEach((field) => {
-    initFormData[field.name] = field.type === 'array' ? [] : '';
+    switch (field.type) {
+      case 'array':
+        initFormData[field.name] = [];
+        break;
+      case 'toggle':
+        initFormData[field.name] = false;
+        break;
+      default:
+        initFormData[field.name] = '';
+    }
+
     initFormErrors[field.name] = '';
   });
 
