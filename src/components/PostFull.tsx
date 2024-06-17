@@ -3,6 +3,7 @@ import Image from './Image';
 import { PostData } from '../types';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
 import { format } from 'date-fns/format'; // https://date-fns.org/v3.6.0/docs/format
+import parse from 'html-react-parser'; // https://www.npmjs.com/package/html-react-parser
 
 interface Props {
   data: PostData;
@@ -39,7 +40,7 @@ export default function PostFull({ data }: Props) {
           <time dateTime={data.createdAt}>{format(data.createdAt, 'PPP')}</time>
         </div>
       </div>
-      <p className="">{decode(data.content)}</p>
+      <div>{parse(decode(data.content))}</div>
     </article>
   );
 }

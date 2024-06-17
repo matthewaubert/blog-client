@@ -3,6 +3,7 @@ import Image from './Image';
 import { PostData } from '../types';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
 import { format } from 'date-fns/format'; // https://date-fns.org/v3.6.0/docs/format
+import parse from 'html-react-parser'; // https://www.npmjs.com/package/html-react-parser
 
 interface PostThumbnailProps {
   data: PostData;
@@ -31,9 +32,9 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
           <p>•</p>
           <time dateTime={data.createdAt}>{format(data.createdAt, 'PPP')}</time>
         </div>
-        <p className="line-clamp-3 text-ellipsis">
-          {trimString(decode(data.content))}
-        </p>
+        <div className="line-clamp-3 text-ellipsis">
+          {parse(trimString(decode(data.content)))}
+        </div>
         <Link
           to={postUrl}
           className="text-sm text-gray-500 underline underline-offset-8"
@@ -52,7 +53,7 @@ export default function PostThumbnail({ data }: PostThumbnailProps) {
  * @returns
  */
 function trimString(string: string) {
-  const length = 300;
+  const length = 500;
   return string.length > length
     ? string.substring(0, length - 3) + '...'
     : string;
