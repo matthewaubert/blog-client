@@ -78,7 +78,6 @@ export interface AuthData extends JwtPayload {
     username: string;
     slug: string;
     email: string;
-    password: string;
     isVerified: boolean;
     isAdmin: boolean;
   };

@@ -1,12 +1,18 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import useFetch from '../utils/use-fetch';
 import Form from '../components/Form';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { BASE_URL } from '../config';
-import { ApiResponse, CategoryData } from '../types';
+import { ApiResponse, AuthData, CategoryData, PostData } from '../types';
 import extractErrorMsg from '../utils/extract-error-msg';
+import { useAuth } from '../utils/auth-utils';
+import PostFull from '../components/PostFull';
 
 export default function CreatePost() {
+  const { authData } = useAuth();
+  const [formData, setFormData] = useState({ ...initFormData(authData) });
+  // console.log('formData:', formData);
+
   const { data, error, loading } = useFetch<ApiResponse<CategoryData[]>>(
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
@@ -16,22 +22,65 @@ export default function CreatePost() {
   }, [data]);
 
   return (
-    <main>
+    <main className="flex flex-col gap-4 max-w-screen-2xl">
+      <h2>Create a New Post</h2>
       {loading && <LoadingIndicator />}
       {error && <p>{error}</p>}
-      {data && (
-        <Form<ApiResponse>
-          fields={fields}
-          action={`${BASE_URL}api/posts`}
-          method="POST"
-          errorExtractor={extractErrorMsg}
-          // dataHandler={}
-          // successMsg=""
-          // navigateTo=""
-        />
-      )}
+      <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
+        {data && (
+          <Form<ApiResponse<PostData>>
+            fields={fields}
+            action={`${BASE_URL}api/posts`}
+            method="POST"
+            errorExtractor={extractErrorMsg}
+            onChange={(data) =>
+              setFormData((formData) => ({ ...formData, ...data }))
+            }
+            // dataHandler={}
+            // successMsg=""
+            // navigateTo=""
+            disabled={!authData}
+          />
+        )}
+        <PostFull data={formData} />
+      </div>
     </main>
   );
+}
+
+function initFormData(authData: AuthData | null) {
+  return {
+    _id: '123',
+    title: 'Horizons Test Editor',
+    slug: 'horizons-test-editor',
+    content:
+      'This is the preview content. As you make edits, they will be displayed here.',
+    user: authData
+      ? authData.user
+      : {
+          _id: '456',
+          firstName: 'Sam',
+          lastName: 'Smith',
+          username: 'sam.smith',
+          slug: 'sam-smith',
+          email: 'sam.smith@email.com',
+          isVerified: false,
+          isAdmin: false,
+        },
+    isPublished: false,
+    category: {
+      _id: '789',
+      name: 'Food',
+      slug: 'food',
+    },
+    displayImg: {
+      attribution: '',
+      source: '',
+      url: '',
+    },
+    createdAt: new Date().toString(),
+    updatedAt: new Date().toString(),
+  };
 }
 
 /**

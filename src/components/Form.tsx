@@ -41,8 +41,10 @@ interface Props<U> {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   errorExtractor?: (data: U) => string;
   dataHandler?: (data: U) => void;
+  onChange?: (data: Record<string, string | string[] | boolean>) => void;
   successMsg?: string;
   navigateTo?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -52,12 +54,14 @@ interface Props<U> {
  * @param {string} [props.btnText] - Optional text to display within button. Defaults to 'Submit'.
  * @param {string} props.action - The resource to which you want to send the form data.
  * @param {string} props.method - The request method, e.g. `'GET'`, `'POST'`.
- * @param {Function} [props.errorExtractor] - Optional function used to pull error messages from
+ * @param {function} [props.errorExtractor] - Optional function used to pull error messages from
  * your expected fetch response. It should accept the fetch response object and return a string.
- * @param {Function} [props.dataHandler] - Optional function that is run upon successful submission.
+ * @param {function} [props.dataHandler] - Optional function that is run upon successful submission.
  * It should accept the response object and return nothing.
+ * @param {function} [props.onChange] - Optional function that is run on any field change
  * @param {string} [props.successMsg] - Optional message to display on successful form submission.
  * @param {string} [props.navigateTo] - Optional URL to navigate to on successful form submission.
+ * @param {boolean} [disabled] - Optionally disable form submission
  * @returns {JSX.Element}
  */
 export default function Form<T>({
@@ -68,8 +72,10 @@ export default function Form<T>({
   method,
   errorExtractor,
   dataHandler,
+  onChange,
   successMsg,
   navigateTo,
+  disabled = false,
 }: Props<T>) {
   const { initFormData, initFormErrors } = initFormFields(fields);
   const [formData, setFormData] = useState({ ...initFormData });
@@ -100,19 +106,37 @@ export default function Form<T>({
   // update formData and clear form error
   function handleInputChange(e: React.ChangeEvent<HTMLFormFieldElement>) {
     const { name, value, type } = e.target;
-
-    // set field value (or set to boolean `checked` value if it's a checkbox)
-    setFormData({
-      ...formData,
+    const updatedFormData = {
       [name]:
         type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
-    });
+    };
+
+    // set field value (or set to boolean `checked` value if it's a checkbox)
+    setFormData({ ...formData, ...updatedFormData });
     setFormErrors({ ...formErrors, [name]: '' }); // reset error for current field
+    if (onChange) onChange(updatedFormData);
   }
 
   function handleArrayInputChange(name: string, value: string[]) {
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { [name]: value };
+    setFormData({ ...formData, ...updatedFormData });
     setFormErrors({ ...formErrors, [name]: '' });
+    if (onChange) onChange(updatedFormData);
+  }
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      try {
+        const imageUrl = await uploadImage(files[0], files[0].name);
+        const updatedFormData = { [name]: imageUrl };
+        setFormData({ ...formData, ...updatedFormData });
+        setFormErrors({ ...formErrors, [name]: '' });
+        if (onChange) onChange(updatedFormData);
+      } catch (err) {
+        setFormErrors({ ...formErrors, [name]: 'Image upload failed.' });
+      }
+    }
   }
 
   // if field is invalid when it loses focus: set form error
@@ -130,21 +154,9 @@ export default function Form<T>({
     });
   }
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      try {
-        const imageUrl = await uploadImage(files[0], files[0].name);
-        setFormData({ ...formData, [name]: imageUrl });
-        setFormErrors({ ...formErrors, [name]: '' });
-      } catch (err) {
-        setFormErrors({ ...formErrors, [name]: 'Image upload failed.' });
-      }
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (disabled) return; // don't allow submission if form is disabled
 
     const { formIsValid, messages } = validateForm(e.target as HTMLFormElement);
     setFormErrors({ ...formErrors, ...messages });
@@ -201,6 +213,7 @@ export default function Form<T>({
                 name={field.name}
                 placeholder="Write your post here..."
                 uploadImage={uploadImage}
+                onChange={onChange}
                 ref={editorRef}
               />
             ) : field.type === 'array' ? (
@@ -292,7 +305,12 @@ export default function Form<T>({
           </div>
         ))}
 
-        <button type="submit" className="form-btn col-span-2">
+        <button
+          type="submit"
+          className="form-btn col-span-2"
+          disabled={disabled}
+          style={disabled ? { backgroundColor: '#9ca3af' } : undefined}
+        >
           {btnText}
         </button>
       </form>

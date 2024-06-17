@@ -2,21 +2,22 @@ import { forwardRef, useImperativeHandle, useRef } from 'react';
 import useFetch, { getErrorMessage } from '../utils/use-fetch';
 import { Editor } from '@tinymce/tinymce-react'; // https://www.tiny.cloud/docs/tinymce/latest/react-ref/
 import { Editor as TinyMceEditor } from 'tinymce';
-import { BASE_URL } from '../config';
 import LoadingIndicator from './LoadingIndicator';
-import { getToken } from '../utils/local-storage';
-import { useAuth } from '../utils/auth-utils';
-import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../config';
 import { ApiResponse } from '../types';
 
 interface Props {
   name: string;
   placeholder?: string;
   uploadImage: (file: Blob, filename: string) => Promise<string>;
+  onChange?: (data: Record<string, string | string[] | boolean>) => void;
 }
 
 // expose CmsEditor to parent component
-const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
+const CmsEditor = forwardRef(function CmsEditor(
+  { name, placeholder, uploadImage, onChange }: Props,
+  ref,
+) {
   // expose TinyMceEditor methods to parent component
   const editorRef = useRef<TinyMceEditor | null>(null);
   useImperativeHandle(ref, () => ({
@@ -24,24 +25,12 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
     uploadImages: () => editorRef.current?.uploadImages(),
   }));
 
-  // if user not logged in and verified, redirect to home page
-  const { authData } = useAuth();
-  const navigate = useNavigate();
-  if (!authData || !authData.user.isVerified) {
-    navigate('/');
-  }
-
   // fetch TinyMCE API key from back end
   const {
     data: apiKey,
     error,
     loading,
-  } = useFetch<ApiResponse<string>>(`${BASE_URL}api/api-keys/tinymce`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
-    },
-  });
+  } = useFetch<ApiResponse<string>>(`${BASE_URL}api/api-keys/tinymce`);
 
   if (error) console.error('Failed to fetch TinyMCE API key: ', error);
 
@@ -52,9 +41,9 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
       {apiKey && (
         <Editor
           apiKey={apiKey.data}
-          textareaName={props.name}
+          textareaName={name}
           onInit={(_evt, editor) => (editorRef.current = editor)}
-          initialValue={props.placeholder ? `<p>${props.placeholder}</p>` : ''}
+          initialValue={placeholder ? `<p>${placeholder}</p>` : ''}
           init={{
             height: 500,
             menubar: true,
@@ -92,7 +81,7 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
              */
             images_upload_handler: async (blobInfo) => {
               try {
-                const imageUrl = await props.uploadImage(
+                const imageUrl = await uploadImage(
                   blobInfo.blob(),
                   blobInfo.filename(),
                 );
@@ -109,6 +98,15 @@ const CmsEditor = forwardRef(function CmsEditor(props: Props, ref) {
             images_reuse_filename: true, // use actual filename of image, instead of generating new one each time
             content_style:
               'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            // ref: https://www.tiny.cloud/blog/textarea-onchange/
+            setup: (editor) => {
+              editor.on('change', () => {
+                if (onChange) {
+                  const content = editorRef.current?.getContent();
+                  if (content) onChange({ [name]: content });
+                }
+              });
+            },
           }}
         />
       )}
