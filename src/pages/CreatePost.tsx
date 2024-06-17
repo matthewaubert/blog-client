@@ -100,6 +100,14 @@ function getFields(categoriesData: CategoryData[]) {
       type: 'text',
       placeholder: 'e.g. Shutterstock',
     },
-    // publish toggle
+    {
+      name: 'isPublished',
+      label: 'Would you like to publish this post?',
+      type: 'toggle',
+      colSpan: true,
+      height: '30px',
+      offColor: '#9ca3af',
+      onColor: '#3b82f6',
+    },
   ];
 }

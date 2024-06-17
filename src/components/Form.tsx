@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ErrorMsg from '../components/ErrorMsg';
 import SubmissionMsg from '../components/SubmissionMsg';
 import ArrayInput from './ArrayInput';
+import Toggle from './Toggle';
 import CmsEditor from './CmsEditor';
 import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
@@ -19,14 +20,17 @@ interface Field {
   label?: string;
   type: string; // e.g. 'text', 'textarea', 'select', 'toggle', 'file', 'array', 'editor'
   placeholder?: string;
-  rows?: number;
+  rows?: number; // 'textarea' type
   required?: boolean;
   colSpan?: boolean;
   selectOptions?: {
     value: string;
     name: string;
     selected?: boolean;
-  }[];
+  }[]; // 'select' type
+  height?: string; // 'toggle' type
+  offColor?: string; // 'toggle' type
+  onColor?: string; // 'toggle' type
 }
 
 interface Props<U> {
@@ -222,30 +226,22 @@ export default function Form<T>({
                 }}
               />
             ) : field.type === 'toggle' ? (
-              <label className="toggle input-container">
-                <span>{field.label}</span>
-                <input
-                  type="checkbox"
-                  className={
-                    'self-start' + (formErrors[field.name] && ' error')
-                  }
-                  id={field.name}
-                  name={field.name}
-                  required={field.required ?? false}
-                  checked={formData[field.name] as boolean}
-                  onChange={handleInputChange}
-                  onBlur={handleInputBlur}
-                />
-                <div
-                  className="slider"
-                  style={{
-                    backgroundColor: formData[field.name] ? '#3b82f6' : '#9ca3af',
-                  }}
-                >
-                  {/* <span className="no">&#10005;</span>
-                  <span className="yes">&#10003;</span> */}
-                </div>
-              </label>
+              <Toggle
+                label={field.label}
+                labelClassName="input-container"
+                toggleClassName={
+                  'self-start' + (formErrors[field.name] && ' error')
+                }
+                id={field.name}
+                name={field.name}
+                required={field.required ?? false}
+                checked={formData[field.name] as boolean}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                height={field.height}
+                offColor={field.offColor}
+                onColor={field.onColor}
+              />
             ) : field.type === 'select' ? (
               <select
                 className={'input' + (formErrors[field.name] && ' error')}
