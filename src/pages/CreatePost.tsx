@@ -82,7 +82,24 @@ function getFields(categoriesData: CategoryData[]) {
       required: true,
       colSpan: true,
     },
-    // displayImg
-    // publish checkbox
+    {
+      name: 'displayImgUrl',
+      label: 'Display Image',
+      type: 'file',
+      colSpan: true,
+    },
+    {
+      name: 'displayImgAttribution',
+      label: 'Image Attribution',
+      type: 'text',
+      placeholder: 'e.g. Sam Smith',
+    },
+    {
+      name: 'displayImgSource',
+      label: 'Image Source',
+      type: 'text',
+      placeholder: 'e.g. Shutterstock',
+    },
+    // publish toggle
   ];
 }
