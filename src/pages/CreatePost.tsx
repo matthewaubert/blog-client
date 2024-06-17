@@ -21,6 +21,27 @@ export default function CreatePost() {
     return data ? getFields(data.data) : [];
   }, [data]);
 
+  function handleFormChange(data: Record<string, string | boolean | string[]>) {
+    const displayImgField = Object.keys(data).find((el) =>
+      el.startsWith('displayImg'),
+    );
+
+    if (displayImgField) {
+      // if data has a key of 'displayImg...', restructure data for nested object
+      const fieldName = displayImgField.replace('displayImg', '').toLowerCase();
+      setFormData((formData) => ({
+        ...formData,
+        displayImg: {
+          ...formData.displayImg,
+          [fieldName]: data[displayImgField],
+        },
+      }));
+    } else {
+      // else, pass data straight in
+      setFormData((formData) => ({ ...formData, ...data }));
+    }
+  }
+
   return (
     <main className="flex flex-col gap-4 max-w-screen-2xl">
       <h2>Create a New Post</h2>
@@ -33,9 +54,7 @@ export default function CreatePost() {
             action={`${BASE_URL}api/posts`}
             method="POST"
             errorExtractor={extractErrorMsg}
-            onChange={(data) =>
-              setFormData((formData) => ({ ...formData, ...data }))
-            }
+            onChange={handleFormChange}
             // dataHandler={}
             // successMsg=""
             // navigateTo=""
