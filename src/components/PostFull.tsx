@@ -19,7 +19,7 @@ export default function PostFull({ data }: Props) {
           className="aspect-[3_/_2] mb-1"
         />
         {(data.displayImg?.attribution || data.displayImg?.source) && (
-          <small className="italic text-gray-500">
+          <small className="text-gray-500 text-sm">
             {'Image' +
               (data.displayImg?.attribution
                 ? ` by ${data.displayImg.attribution}`
@@ -40,7 +40,9 @@ export default function PostFull({ data }: Props) {
           <time dateTime={data.createdAt}>{format(data.createdAt, 'PPP')}</time>
         </div>
       </div>
-      <div>{parse(decode(data.content))}</div>
+      <div className="post-content flex flex-col gap-3">
+        {parse(decode(data.content))}
+      </div>
     </article>
   );
 }

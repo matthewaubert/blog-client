@@ -45,23 +45,36 @@ export default function CreatePost() {
   return (
     <main className="flex flex-col gap-4 max-w-screen-2xl">
       <h2>Create a New Post</h2>
+      <div className="flex flex-col gap-1">
+        <p>
+          Craft your post in the editor below and your changes will be reflected
+          in the preview.
+        </p>
+        <p>
+          You must be a verified user to actually submit a post. But we hope the
+          chance to test out the editor suite will encourage you to join!
+        </p>
+      </div>
       {loading && <LoadingIndicator />}
       {error && <p>{error}</p>}
-      <div className="grid gap-8 grid-cols-1 lg:grid-cols-2">
-        {data && (
-          <Form<ApiResponse<PostData>>
-            fields={fields}
-            action={`${BASE_URL}api/posts`}
-            method="POST"
-            errorExtractor={extractErrorMsg}
-            onChange={handleFormChange}
-            // dataHandler={}
-            // successMsg=""
-            // navigateTo=""
-            disabled={!authData}
-          />
-        )}
-        <PostFull data={formData} />
+      <div className="grid gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-2 items-start">
+        <div className="h-[86vh] overflow-y-scroll py-2 border-y border-gray-300">
+          {data && (
+            <Form<ApiResponse<PostData>>
+              fields={fields}
+              action={`${BASE_URL}api/posts`}
+              method="POST"
+              errorExtractor={extractErrorMsg}
+              onChange={handleFormChange}
+              successMsg="Post created!"
+              navigateTo="/"
+              disabled={!authData}
+            />
+          )}
+        </div>
+        <div className="h-[86vh] overflow-y-scroll py-2 border-y border-gray-300">
+          <PostFull data={formData} />
+        </div>
       </div>
     </main>
   );

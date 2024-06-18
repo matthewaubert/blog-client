@@ -70,7 +70,7 @@ export default function ArrayInput({
         onBlur={onBlur}
       />
       {value.length > 0 && (
-        <div className="flex gap-1 mt-2">
+        <div className="flex flex-wrap gap-1 mt-2">
           {value.map((item, index) => (
             <span key={index} className="text-sm p-1 pl-2 rounded bg-gray-200">
               {item}

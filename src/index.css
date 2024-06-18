@@ -139,3 +139,10 @@ a {
 .grid-cols-autofill h4 {
   @apply mb-1;
 }
+
+/* CMS post content */
+
+.post-content figcaption {
+  @apply text-gray-500;
+  @apply text-sm;
+}
