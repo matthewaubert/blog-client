@@ -49,7 +49,7 @@ const routerConfig = [
         element: <CategoryPage />,
       },
       {
-        path: 'author/create-post',
+        path: 'create-post',
         element: <CreatePost />,
       },
     ],

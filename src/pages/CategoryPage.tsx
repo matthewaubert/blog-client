@@ -33,7 +33,7 @@ export default function UserPage() {
     postData?.data.filter(
       (post) => post.isPublished && post.category?.slug === categorySlug,
     ) ?? [];
-  if (categoryPosts) console.log(categoryPosts);
+  // if (categoryPosts) console.log(categoryPosts);
 
   return (
     <main className="flex flex-col gap-4">
