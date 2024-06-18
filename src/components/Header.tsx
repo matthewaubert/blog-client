@@ -34,10 +34,12 @@ export default function Header() {
     };
   });
 
+  const payloadIsValid = !isPayloadExpired(authData);
+
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-10 py-4 bg-white flex justify-between items-center"
+      className="sticky top-0 z-10 py-4 bg-white flex justify-between items-center text-lg"
     >
       <h1>
         <Link to="/" className="text-blue-500 hover:text-blue-600">
@@ -59,39 +61,36 @@ export default function Header() {
           'bg-blue-100 border-b border-gray-300 font-bold shadow-lg'
         }
       >
-        {/* <Icon path={mdiMagnify} color="" className="h-7 fill-gray-500" /> */}
-        {!isPayloadExpired(authData) ? (
+        {payloadIsValid ? (
           <>
             {!authData?.user.isVerified && (
-              <Link to="/become-author" className="text-lg">
-                Become an author
-              </Link>
+              <Link to="/become-author">Become an author</Link>
             )}
-            <Link to="/" className="text-lg" onClick={logout}>
+            <Link to="/" onClick={logout}>
               Log out
             </Link>
           </>
         ) : (
           <>
-            <Link to="/signup" className="text-lg">
-              Sign up
-            </Link>
-            <Link to="/login" className="text-lg">
-              Log in
-            </Link>
+            <Link to="/signup">Sign up</Link>
+            <Link to="/login">Log in</Link>
           </>
         )}
+
+        <hr className="border border-blue-300 w-full" />
+        <Link to="/create-post">
+          {payloadIsValid && authData?.user.isVerified
+            ? 'Create a new post'
+            : 'Try editor suite'}
+        </Link>
+
         <hr className="border border-blue-300 w-full" />
         <>
           {loading && <p>Loading...</p>}
           {error && <p>{error}</p>}
           {data &&
             data.data.map((category) => (
-              <Link
-                to={`categories/${category.slug}`}
-                key={category._id}
-                className="text-lg"
-              >
+              <Link to={`categories/${category.slug}`} key={category._id}>
                 {decode(category.name)}
               </Link>
             ))}
