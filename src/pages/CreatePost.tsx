@@ -5,12 +5,17 @@ import LoadingIndicator from '../components/LoadingIndicator';
 import { BASE_URL } from '../config';
 import { ApiResponse, AuthData, CategoryData, PostData } from '../types';
 import extractErrorMsg from '../utils/extract-error-msg';
-import { useAuth } from '../utils/auth-utils';
+import { useAuth, isPayloadExpired } from '../utils/auth-utils';
 import PostFull from '../components/PostFull';
+import { Link } from 'react-router-dom';
 
 export default function CreatePost() {
   const { authData } = useAuth();
-  const [formData, setFormData] = useState({ ...initFormData(authData) });
+  const payloadIsValid = !isPayloadExpired(authData);
+  // init form data with `authData` if payload not expired
+  const [formData, setFormData] = useState({
+    ...initFormData(payloadIsValid ? authData : null),
+  });
   // console.log('formData:', formData);
 
   const { data, error, loading } = useFetch<ApiResponse<CategoryData[]>>(
@@ -68,7 +73,7 @@ export default function CreatePost() {
               onChange={handleFormChange}
               successMsg="Post created!"
               navigateTo="/"
-              disabled={!authData}
+              disabled={!payloadIsValid}
             />
           )}
         </div>
@@ -76,6 +81,20 @@ export default function CreatePost() {
           <PostFull data={formData} />
         </div>
       </div>
+      {(!payloadIsValid || !authData?.user.isVerified) && (
+        <p>
+          Like what you see and want to contribute to Horizons as an author?{' '}
+          {!payloadIsValid ? (
+            <Link to="/signup" className="login">
+              Sign up
+            </Link>
+          ) : (
+            <Link to="/become-author" className="login">
+              Become an author
+            </Link>
+          )}
+        </p>
+      )}
     </main>
   );
 }
