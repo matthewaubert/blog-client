@@ -309,7 +309,11 @@ export default function Form<T>({
           type="submit"
           className="form-btn col-span-2"
           disabled={disabled}
-          style={disabled ? { backgroundColor: '#9ca3af' } : undefined}
+          style={
+            disabled
+              ? { backgroundColor: '#9ca3af', cursor: 'not-allowed' }
+              : undefined
+          }
         >
           {btnText}
         </button>
