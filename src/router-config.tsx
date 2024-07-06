@@ -9,6 +9,7 @@ import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import CategoryPage from './pages/CategoryPage';
 import CreatePost from './pages/CreatePost';
+import MyPosts from './pages/MyPosts';
 
 const routerConfig = [
   {
@@ -51,6 +52,10 @@ const routerConfig = [
       {
         path: 'create-post',
         element: <CreatePost />,
+      },
+      {
+        path: 'my-posts',
+        element: <MyPosts />,
       },
     ],
   },

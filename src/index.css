@@ -26,7 +26,8 @@ h2 {
   @apply sm:text-3xl;
 }
 
-h3 {
+h3, 
+thead th {
   @apply text-xl;
   @apply sm:text-2xl;
 }
@@ -54,6 +55,18 @@ main {
   @apply -mx-6;
   @apply md:-mx-7;
   @apply lg:mx-0;
+}
+
+th,
+td {
+  @apply text-left;
+  @apply p-2;
+  @apply text-sm;
+  @apply sm:text-base;
+}
+
+td {
+  @apply text-gray-600;
 }
 
 .splash {

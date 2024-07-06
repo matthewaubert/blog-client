@@ -83,6 +83,9 @@ export default function Header() {
             ? 'Create a new post'
             : 'Try editor suite'}
         </Link>
+        {payloadIsValid && authData?.user.isVerified ? (
+          <Link to="/my-posts">My posts</Link>
+        ) : <></>}
 
         <hr className="border border-blue-300 w-full" />
         <>
