@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useFetch from '../utils/use-fetch';
 import { Link } from 'react-router-dom';
 import Icon from '@mdi/react'; // https://pictogrammers.com/docs/library/mdi/getting-started/react/
 import {
@@ -8,7 +9,10 @@ import {
 } from '@mdi/js';
 import { decode } from 'he'; // https://www.npmjs.com/package/he
 import { format } from 'date-fns'; // https://date-fns.org/v3.6.0/docs/format
-import { PostData } from '../types';
+import { getToken } from '../utils/local-storage';
+import extractErrorMsg from '../utils/extract-error-msg';
+import { BASE_URL } from '../config';
+import { ApiResponse, PostData } from '../types';
 
 interface Props {
   data: PostData;
@@ -16,8 +20,28 @@ interface Props {
 }
 
 export default function CmsPostCard({ data }: Props) {
+  const { fetchData } = useFetch<ApiResponse<PostData>>();
   const [isOpen, setIsOpen] = useState(false);
   const postUrl = `/posts/${data.slug}`;
+
+  function handleDelete() {
+    if (window.confirm('Are you sure you want to delete this?')) {
+      const token = getToken(); // get JWT from `localStorage`
+
+      if (token) {
+        fetchData(`${BASE_URL}api/posts/${data._id}`, {
+          errorExtractor: extractErrorMsg,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          method: 'DELETE',
+        })
+          .catch((error) => console.error('Error deleting post:', error))
+          .finally(() => window.location.reload());
+      }
+    }
+  }
 
   return (
     <div className="border border-gray-200 rounded-lg p-2 shadow">
@@ -90,7 +114,10 @@ export default function CmsPostCard({ data }: Props) {
                     />
                     <span>Edit</span>
                   </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2 w-fit flex items-center gap-2 transition-all">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2 w-fit flex items-center gap-2 transition-all"
+                    onClick={handleDelete}
+                  >
                     <Icon
                       path={mdiMinusCircleOutline}
                       color=""
