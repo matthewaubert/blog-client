@@ -24,16 +24,8 @@ export default function UserPage() {
     error: postError,
     loading: postLoading,
   } = useFetch<ApiResponse<PostData[]>>(
-    `${BASE_URL}api/posts?sort[createdAt]=desc`,
+    `${BASE_URL}api/posts?categorySlug=${categorySlug}&sort[createdAt]=desc`,
   );
-  // console.log(postData || postError || postLoading);
-
-  // filter for all category's posts that are published; default to empty array
-  const categoryPosts =
-    postData?.data.filter(
-      (post) => post.isPublished && post.category?.slug === categorySlug,
-    ) ?? [];
-  // if (categoryPosts) console.log(categoryPosts);
 
   return (
     <main className="flex flex-col gap-4">
@@ -41,9 +33,9 @@ export default function UserPage() {
       {postError && <p>{postError}</p>}
 
       {categoryData && <h2>Category: {categoryData.data.name}</h2>}
-      {categoryPosts.length ? (
+      {postData && postData.data.length ? (
         <div className="flex flex-col gap-12">
-          {categoryPosts.map(
+          {postData.data.map(
             (post) =>
               post.isPublished && <PostThumbnail key={post._id} data={post} />,
           )}

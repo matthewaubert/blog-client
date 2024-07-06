@@ -162,8 +162,13 @@ To do:
 ## 6/10/24
 
 To do:
-- [ ] Finish building out CreatePost form
+- [x] Finish building out CreatePost form
   - [x] category
   - [x] tags
-  - [ ] display image
-  - [ ] publish
+  - [x] display image
+  - [x] publish
+
+## 6/5/24
+
+To do:
+- [x] Refactor filtering by user/category ID/slug to the back end
