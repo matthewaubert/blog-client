@@ -8,26 +8,21 @@ import { ApiResponse, PostData } from '../types';
 export default function UserPage() {
   const { userSlug } = useParams();
   const { data, error, loading } = useFetch<ApiResponse<PostData[]>>(
-    `${BASE_URL}api/posts?sort[createdAt]=desc`,
+    `${BASE_URL}api/posts?userSlug=${userSlug}&sort[createdAt]=desc`,
   );
-  // console.log(data || error || loading);
 
-  // filter for all user's posts that are published; default to empty array
-  const userPosts =
-    data?.data.filter(
-      (post) => post.isPublished && post.user.slug === userSlug,
-    ) ?? [];
-  // if (userPosts) console.log(userPosts);
+  if (error) {
+    throw new Error('A user with that name does not exist.');
+  }
 
   return (
     <main className="flex flex-col gap-12">
       {loading && <LoadingIndicator />}
-      {error && <p>{error}</p>}
-      {userPosts.length ? (
+      {data && data.data.length ? (
         <>
-          <h2>Posts by {userPosts[0].user.username}</h2>
+          <h2>Posts by {data.data[0].user.username}</h2>
           <div className="flex flex-col gap-8">
-            {userPosts.map(
+            {data.data.map(
               (post) =>
                 post.isPublished && (
                   <PostThumbnail key={post._id} data={post} />
