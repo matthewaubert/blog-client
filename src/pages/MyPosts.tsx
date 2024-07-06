@@ -1,6 +1,6 @@
 import useFetch from '../utils/use-fetch';
 import { useAuth } from '../utils/auth-utils';
-// import CmsPostCard from '../components/CmsPostCard';
+import CmsPostCard from '../components/CmsPostCard';
 import LoadingIndicator from '../components/LoadingIndicator';
 import { BASE_URL } from '../config';
 import { ApiResponse, PostData } from '../types';
@@ -26,13 +26,13 @@ export default function MyPosts() {
     <main className="flex flex-col gap-6 mt-4 md:mt-6">
       <h2>My Posts</h2>
       {loading && <LoadingIndicator />}
-      {/* {data && (
+      {data && (
         <div className="flex flex-col gap-6">
           {data.data.map((post) => (
             <CmsPostCard key={post._id} data={post} />
           ))}
         </div>
-      )} */}
+      )}
     </main>
   );
 }

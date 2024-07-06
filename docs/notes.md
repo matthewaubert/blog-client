@@ -173,4 +173,4 @@ To do:
 To do:
 - [x] Refactor filtering by user/category ID/slug to the back end
 - [x] Create CMS page for My Posts
-- [ ] Create CMS post card component
+- [x] Create CMS post card component
