@@ -125,14 +125,17 @@ export default function CmsPostCard({ data }: Props) {
                     />
                     <span className="-ml-[1px]">View</span>
                   </Link>
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 w-fit flex items-center gap-2 transition-all">
+                  <Link
+                    to={`/posts/${data.slug}/edit`}
+                    className="bg-blue-500 hover:bg-blue-600 text-white hover:text-white rounded px-3 py-2 w-fit flex items-center gap-2"
+                  >
                     <Icon
                       path={mdiCircleEditOutline}
                       color=""
                       className="h-5 sm:h-6 fill-white"
                     />
                     <span>Edit</span>
-                  </button>
+                  </Link>
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white rounded px-3 py-2 w-fit flex items-center gap-2 transition-all"
                     onClick={handleDelete}
