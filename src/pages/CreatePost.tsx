@@ -50,6 +50,33 @@ export default function CreatePost() {
     initForm().catch(console.error);
   }, [postSlug, fetchData]);
 
+  // if `postData`, set form data to post data
+  useEffect(() => {
+    if (postData) {
+      setFormData({ ...postData.data });
+    }
+  }, [postData]);
+
+  // if `postData`, create `initialValues` object for form
+  const initialValues = useMemo(() => {
+    if (postData) {
+      const { data } = postData;
+
+      return {
+        title: data.title,
+        category: data.category?._id || '',
+        tags: data.tags || [],
+        content: data.content,
+        isPublished: data.isPublished,
+        displayImgUrl: data.displayImg?.url || '',
+        displayImgAttribution: data.displayImg?.attribution || '',
+        displayImgSource: data.displayImg?.source || '',
+      };
+    }
+
+    return null;
+  }, [postData]);
+
   function handleFormChange(data: Record<string, string | boolean | string[]>) {
     const displayImgField = Object.keys(data).find((el) =>
       el.startsWith('displayImg'),
@@ -91,14 +118,15 @@ export default function CreatePost() {
       {postError && <p>{postError}</p>}
       <div className="grid gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-2 items-start">
         <div className="h-[86vh] overflow-y-scroll py-2 border-y border-gray-300">
-          {data && (
+          {categoryData && (!postSlug || initialValues) && (
             <Form<ApiResponse<PostData>>
               fields={fields}
-              action={`${BASE_URL}api/posts`}
-              method="POST"
+              initialValues={initialValues}
+              action={`${BASE_URL}api/posts` + (postSlug ? `/${postSlug}` : '')}
+              method={postSlug ? 'PATCH' : 'POST'}
               errorExtractor={extractErrorMsg}
               onChange={handleFormChange}
-              successMsg="Post created!"
+              successMsg={postSlug ? 'Post updated!' : 'Post created!'}
               navigateTo="/"
               disabled={!payloadIsValid}
             />
@@ -126,7 +154,12 @@ export default function CreatePost() {
   );
 }
 
-function initFormData(authData: AuthData | null) {
+/**
+ * Generate default form data object to display in preview.
+ * @param {object} authData - user data from auth context
+ * @returns `PostData` object.
+ */
+function initFormData(authData: AuthData | null): PostData {
   return {
     _id: '123',
     title: 'Horizons Test Editor',
@@ -141,16 +174,15 @@ function initFormData(authData: AuthData | null) {
           lastName: 'Smith',
           username: 'sam.smith',
           slug: 'sam-smith',
-          email: 'sam.smith@email.com',
-          isVerified: false,
-          isAdmin: false,
         },
     isPublished: false,
     category: {
       _id: '789',
       name: 'Food',
       slug: 'food',
+      description: '',
     },
+    tags: [],
     displayImg: {
       attribution: '',
       source: '',

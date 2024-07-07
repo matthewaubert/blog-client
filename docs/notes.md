@@ -175,3 +175,4 @@ To do:
 - [x] Create CMS page for My Posts
 - [x] Create CMS post card component
 - [x] Refactor CreatePost to fetch post data if editing post
+- [x] Refactor CreatePost to generate initial values for form
