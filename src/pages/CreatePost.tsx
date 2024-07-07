@@ -1,15 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import useFetch from '../utils/use-fetch';
+import { useAuth, isPayloadExpired } from '../utils/auth-utils';
 import Form from '../components/Form';
+import PostFull from '../components/PostFull';
 import LoadingIndicator from '../components/LoadingIndicator';
+import extractErrorMsg from '../utils/extract-error-msg';
+import { Link, useParams } from 'react-router-dom'; // https://reactrouter.com/en/6.23.0/hooks/use-params
 import { BASE_URL } from '../config';
 import { ApiResponse, AuthData, CategoryData, PostData } from '../types';
-import extractErrorMsg from '../utils/extract-error-msg';
-import { useAuth, isPayloadExpired } from '../utils/auth-utils';
-import PostFull from '../components/PostFull';
-import { Link } from 'react-router-dom';
 
 export default function CreatePost() {
+  const { postSlug } = useParams();
   const { authData } = useAuth();
   const payloadIsValid = !isPayloadExpired(authData);
   // init form data with `authData` if payload not expired
@@ -18,13 +19,36 @@ export default function CreatePost() {
   });
   // console.log('formData:', formData);
 
-  const { data, error, loading } = useFetch<ApiResponse<CategoryData[]>>(
+  const {
+    data: categoryData,
+    error: categoryError,
+    loading: categoryLoading,
+  } = useFetch<ApiResponse<CategoryData[]>>(
     `${BASE_URL}api/categories?sort[name]=asc`,
   );
 
   const fields = useMemo(() => {
-    return data ? getFields(data.data) : [];
-  }, [data]);
+    return categoryData ? getFields(categoryData.data) : [];
+  }, [categoryData]);
+
+  // conditionally use this hook below to fetch post data if `postSlug` exists
+  const {
+    data: postData,
+    error: postError,
+    loading: postLoading,
+    fetchData,
+  } = useFetch<ApiResponse<PostData>>();
+
+  // if `postSlug`, fetch post data
+  useEffect(() => {
+    async function initForm() {
+      if (postSlug) {
+        await fetchData(`${BASE_URL}api/posts/${postSlug}`);
+      }
+    }
+
+    initForm().catch(console.error);
+  }, [postSlug, fetchData]);
 
   function handleFormChange(data: Record<string, string | boolean | string[]>) {
     const displayImgField = Object.keys(data).find((el) =>
@@ -49,19 +73,22 @@ export default function CreatePost() {
 
   return (
     <main className="flex flex-col gap-4 max-w-screen-2xl">
-      <h2>Create a New Post</h2>
+      <h2>{postSlug ? 'Edit Your Post' : 'Create a New Post'}</h2>
       <div className="flex flex-col gap-1">
         <p>
           Craft your post in the editor below and your changes will be reflected
           in the preview.
         </p>
-        <p>
-          You must be a verified user to actually submit a post. But we hope the
-          chance to test out the editor suite will encourage you to join!
-        </p>
+        {!payloadIsValid && (
+          <p>
+            You must be a verified user to actually submit a post. But we hope
+            the chance to test out the editor suite will encourage you to join!
+          </p>
+        )}
       </div>
-      {loading && <LoadingIndicator />}
-      {error && <p>{error}</p>}
+      {(categoryLoading || (postSlug && postLoading)) && <LoadingIndicator />}
+      {categoryError && <p>{categoryError}</p>}
+      {postError && <p>{postError}</p>}
       <div className="grid gap-6 lg:gap-8 grid-cols-1 lg:grid-cols-2 items-start">
         <div className="h-[86vh] overflow-y-scroll py-2 border-y border-gray-300">
           {data && (

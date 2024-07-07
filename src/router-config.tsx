@@ -54,6 +54,10 @@ const routerConfig = [
         element: <CreatePost />,
       },
       {
+        path: 'posts/:postSlug/edit',
+        element: <CreatePost />,
+      },
+      {
         path: 'my-posts',
         element: <MyPosts />,
       },

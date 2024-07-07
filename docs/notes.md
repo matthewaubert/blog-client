@@ -174,3 +174,4 @@ To do:
 - [x] Refactor filtering by user/category ID/slug to the back end
 - [x] Create CMS page for My Posts
 - [x] Create CMS post card component
+- [x] Refactor CreatePost to fetch post data if editing post
