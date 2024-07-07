@@ -9,6 +9,7 @@ import CmsEditor from './CmsEditor';
 import { Editor as TinyMceEditor } from 'tinymce';
 import { getToken } from '../utils/local-storage';
 import uploadImage from '../utils/upload-image';
+import { decode } from 'he';
 
 type HTMLFormFieldElement =
   | HTMLInputElement
@@ -36,6 +37,7 @@ interface Field {
 interface Props<U> {
   className?: string;
   fields?: Field[];
+  initialValues?: Record<string, string | string[] | boolean> | null;
   btnText?: string;
   action: string;
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
@@ -51,6 +53,7 @@ interface Props<U> {
  * JSX component for a form meant to submit its data to an API.
  * @param {Props} props
  * @param {object[]} [props.fields] - Optional array of objects defining the fields to display.
+ * @param {object[]} [props.initialValues] - Optional object containing initial values for form fields.
  * @param {string} [props.btnText] - Optional text to display within button. Defaults to 'Submit'.
  * @param {string} props.action - The resource to which you want to send the form data.
  * @param {string} props.method - The request method, e.g. `'GET'`, `'POST'`.
@@ -67,6 +70,7 @@ interface Props<U> {
 export default function Form<T>({
   className,
   fields = [],
+  initialValues,
   btnText = 'Submit',
   action,
   method,
@@ -77,9 +81,13 @@ export default function Form<T>({
   navigateTo,
   disabled = false,
 }: Props<T>) {
-  const { initFormData, initFormErrors } = initFormFields(fields);
-  const [formData, setFormData] = useState({ ...initFormData });
-  const [formErrors, setFormErrors] = useState({ ...initFormErrors });
+  // console.log('initialValues', initialValues);
+  const { initialFormData, initialFormErrors } = initFormFields(
+    fields,
+    initialValues,
+  );
+  const [formData, setFormData] = useState({ ...initialFormData });
+  const [formErrors, setFormErrors] = useState({ ...initialFormErrors });
   const passwordRef = useRef<null | HTMLInputElement>(null);
   const editorRef = useRef<TinyMceEditor | null>(null);
   const { data, error, fetchData } = useFetch<T>();
@@ -98,7 +106,7 @@ export default function Form<T>({
       }
       // clear form fields
       if (Object.keys(fields).length) {
-        setFormData(() => ({ ...initFormFields(fields).initFormData }));
+        setFormData(() => ({ ...initFormFields(fields).initialFormData }));
       }
     }
   }, [data, navigate, navigateTo, dataHandler, fields]);
@@ -211,7 +219,7 @@ export default function Form<T>({
             {field.type === 'editor' ? (
               <CmsEditor
                 name={field.name}
-                placeholder="Write your post here..."
+                placeholder={initEditorContent(fields, initialValues)}
                 uploadImage={uploadImage}
                 onChange={onChange}
                 ref={editorRef}
@@ -323,37 +331,72 @@ export default function Form<T>({
 }
 
 /**
- * Return an object containing `initFormData` and `initFormErrors` objects.
+ * Return an object containing `initialFormData` and `initialFormErrors` objects.
  * Both contain a property for each object in the given array of `fields`,
  * with a key of the `field.name`.
- * - `initFormData` property values are empty strings and/or empty arrays of strings.
- * - `initFormErrors` property values are always empty strings.
+ * - `initialFormData` property values are empty strings and/or empty arrays of strings.
+ * - `initialFormErrors` property values are always empty strings.
  * @param fields - e.g. `{ { name: 'title', ... }, { name: 'tags', ... } }`
  * @returns e.g. `{
- *   initFormData: { title: '', tags: [] },
- *   initFormErrors: { title: '', tags: '' }
+ *   initialFormData: { title: '', tags: [] },
+ *   initialFormErrors: { title: '', tags: '' }
  * }`
  */
-function initFormFields(fields: Field[]) {
-  const initFormData = {} as Record<string, string | string[] | boolean>;
-  const initFormErrors = {} as Record<string, string>;
+function initFormFields(
+  fields: Field[],
+  initialValues?:
+    | Record<string, string | string[] | boolean>
+    | null
+    | undefined,
+) {
+  const initialFormData = {} as Record<string, string | string[] | boolean>;
+  const initialFormErrors = {} as Record<string, string>;
 
   fields.forEach((field) => {
-    switch (field.type) {
-      case 'array':
-        initFormData[field.name] = [];
-        break;
-      case 'toggle':
-        initFormData[field.name] = false;
-        break;
-      default:
-        initFormData[field.name] = '';
-    }
+    initialFormData[field.name] =
+      initialValues?.[field.name] || getDefaultFieldValue(field);
 
-    initFormErrors[field.name] = '';
+    initialFormErrors[field.name] = '';
   });
 
-  return { initFormData, initFormErrors };
+  return { initialFormData, initialFormErrors };
+}
+
+/**
+ * Return default value for given field type.
+ * @param {object} field 
+ * @returns `[]`, `false`, or `''`
+ */
+function getDefaultFieldValue(field: Field) {
+  switch (field.type) {
+    case 'array':
+      return [];
+    case 'toggle':
+      return false;
+    default:
+      return '';
+  }
+}
+
+/**
+ * Initialize content for editor field, if any.
+ * @param {object[]} fields - `Form` `fields` prop
+ * @param {object} initialValues - `Form` `initialValues` prop
+ * @returns {string} HTML content to initialize editor field with
+ */
+function initEditorContent(
+  fields: Field[],
+  initialValues?:
+    | Record<string, string | string[] | boolean>
+    | null
+    | undefined,
+) {
+  // find editor field if there is one
+  const editorField = fields.find((field) => field.type === 'editor');
+
+  return editorField && initialValues?.[editorField.name]
+    ? decode(initialValues[editorField.name] as string)
+    : '<p>Write your post here...</p>';
 }
 
 /**

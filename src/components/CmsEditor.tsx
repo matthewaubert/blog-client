@@ -43,7 +43,7 @@ const CmsEditor = forwardRef(function CmsEditor(
           apiKey={apiKey.data}
           textareaName={name}
           onInit={(_evt, editor) => (editorRef.current = editor)}
-          initialValue={placeholder ? `<p>${placeholder}</p>` : ''}
+          initialValue={placeholder ?? ''}
           init={{
             height: 500,
             menubar: true,
