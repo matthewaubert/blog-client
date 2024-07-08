@@ -8,7 +8,7 @@ import VerifyEmail from './pages/VerifyEmail';
 import UserPage from './pages/UserPage';
 import PostPage from './pages/PostPage';
 import CategoryPage from './pages/CategoryPage';
-import CreatePost from './pages/CreatePost';
+import PostEditorSuite from './pages/PostEditorSuite';
 import MyPosts from './pages/MyPosts';
 
 const routerConfig = [
@@ -51,11 +51,11 @@ const routerConfig = [
       },
       {
         path: 'create-post',
-        element: <CreatePost />,
+        element: <PostEditorSuite />,
       },
       {
         path: 'posts/:postSlug/edit',
-        element: <CreatePost />,
+        element: <PostEditorSuite />,
       },
       {
         path: 'my-posts',

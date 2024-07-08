@@ -9,7 +9,7 @@ import { Link, useParams } from 'react-router-dom'; // https://reactrouter.com/e
 import { BASE_URL } from '../config';
 import { ApiResponse, AuthData, CategoryData, PostData } from '../types';
 
-export default function CreatePost() {
+export default function PostEditorSuite() {
   const { postSlug } = useParams();
   const { authData } = useAuth();
   const payloadIsValid = !isPayloadExpired(authData);
