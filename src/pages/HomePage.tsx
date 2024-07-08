@@ -19,7 +19,7 @@ export default function HomePage() {
         <section className="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-x-8 gap-y-4 pb-6 -mb-4 border-b border-gray-300">
           <div className="flex flex-col gap-3">
             <h3>
-              <Link to="/create-post">Try our Editor Suite!</Link>
+              <Link to="/posts/create">Try our Editor Suite!</Link>
             </h3>
             <p className="md:text-lg max-w-[605px]">
               Want to be an author and make your ideas heard? Test out our
@@ -27,7 +27,7 @@ export default function HomePage() {
               they would appear here on Horizons!
             </p>
             <Link
-              to="/create-post"
+              to="/posts/create"
               className="login"
             >
               Check it out

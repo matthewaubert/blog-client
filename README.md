@@ -3,18 +3,18 @@
 In-progress front end for the Horizons blogging platform project. Built with TypeScript, React, and Tailwind CSS.
 
 **[Click here to view the live site](https://horizons-ma.pages.dev)**  
-**[Click here to try out the editor suite](https://horizons-ma.pages.dev/create-post)**  
+**[Click here to try out the editor suite](https://horizons-ma.pages.dev/posts/create)**  
 **[Click here to see the GitHub repo for the back end](https://github.com/matthewaubert/blog-api)**
 
 [![screenshot of home page](docs/images/home-page.png)](https://horizons-ma.pages.dev)
-[![screenshot of editor suite](docs/images/editor-suite.png)](https://horizons-ma.pages.dev/create-post)
+[![screenshot of editor suite](docs/images/editor-suite.png)](https://horizons-ma.pages.dev/posts/create)
 [![screenshot of example post](docs/images/example-post.png)](https://horizons-ma.pages.dev/http://localhost:5173/posts/bryce-canyon-national-park)
 
 ## How to Use
 
 1. [Head to the live site](https://horizons-ma.pages.dev) on any device (mobile, tablet, or desktop – it doesn't matter).
 1. Scroll down past the splash page to check out all the awesome blog posts written by Horizon's authors.
-1. [Check out the editor suite](https://horizons-ma.pages.dev/create-post) if you'd like to try creating your own posts. You're welcome to play around with it to see how it works, but in order to submit a real post, you'll have to [create an account](https://horizons-ma.pages.dev/signup) and [verify your email address](https://horizons-ma.pages.dev/become-author).
+1. [Check out the editor suite](https://horizons-ma.pages.dev/posts/create) if you'd like to try creating your own posts. You're welcome to play around with it to see how it works, but in order to submit a real post, you'll have to [create an account](https://horizons-ma.pages.dev/signup) and [verify your email address](https://horizons-ma.pages.dev/become-author).
 
 ## Project Objectives
 

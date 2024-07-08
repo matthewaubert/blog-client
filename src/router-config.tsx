@@ -38,28 +38,34 @@ const routerConfig = [
         element: <VerifyEmail />,
       },
       {
-        path: 'users/:userSlug',
-        element: <UserPage />,
+        // create a post
+        path: 'posts/create',
+        element: <PostEditorSuite />,
       },
       {
+        // view a post
         path: 'posts/:postSlug',
         element: <PostPage />,
       },
       {
-        path: 'categories/:categorySlug',
-        element: <CategoryPage />,
-      },
-      {
-        path: 'create-post',
-        element: <PostEditorSuite />,
-      },
-      {
+        // edit a post
         path: 'posts/:postSlug/edit',
         element: <PostEditorSuite />,
       },
       {
+        // CMS dashboard
         path: 'my-posts',
         element: <MyPosts />,
+      },
+      {
+        // view posts of a particular user
+        path: 'users/:userSlug',
+        element: <UserPage />,
+      },
+      {
+        // view posts of a particular category
+        path: 'categories/:categorySlug',
+        element: <CategoryPage />,
       },
     ],
   },

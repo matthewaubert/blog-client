@@ -78,7 +78,7 @@ export default function Header() {
         )}
 
         <hr className="border border-blue-300 w-full" />
-        <Link to="/create-post">
+        <Link to="/posts/create">
           {payloadIsValid && authData?.user.isVerified
             ? 'Create a new post'
             : 'Try editor suite'}
